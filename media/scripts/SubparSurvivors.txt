@@ -1,0 +1,27 @@
+module Subpar
+{
+    item StrangeMeat
+    {
+        HungerChange	=	-30,
+        Weight	=	0.3,
+        Type	=	Food,
+        IsCookable	=	TRUE,
+        DangerousUncooked	=	TRUE,
+        DaysTotallyRotten	=	4,
+        MinutesToBurn	=	70,
+        DisplayName	=	Meat,
+        Icon	=	Porkchop,
+        DaysFresh	=	2,
+        MinutesToCook	=	50,
+        EvolvedRecipe = Soup:15;Stew:15;Pie:15;Stir fry Griddle Pan:15;Stir fry:15;Sandwich:5|Cooked;Burger:10;Salad:10|Cooked;Roasted Vegetables:15;RicePot:15;RicePan:15;PastaPot:15;PastaPan:15,
+        FoodType    =   Meat,
+        Carbohydrates = 0,
+        Proteins = 25,
+        Lipids = 6,
+        Calories = 150,
+        BadInMicrowave = true,
+        GoodHot = true,
+        BadCold = true,
+		UnhappyChange = 20,
+    }
+}
