@@ -64,11 +64,11 @@ function SuperSurvivorPlayerInit(player)
 					wife:setAIMode("Follow")
 					tm:AddToTop(followtask)
 
-					if(ZombRand(100) < (ChanceToSpawnWithGun)) then 
-						wife:giveWeapon(getWeapon(RangeWeapons[ZombRand(1,#RangeWeapons)]),true) 				
-					elseif(ZombRand(100) < (ChanceToSpawnWithWep)) then 
-						wife:giveWeapon(MeleWeapons[ZombRand(1,#MeleWeapons)],true) 
-					end
+					--if(ZombRand(100) < (ChanceToSpawnWithGun)) then 
+					--	wife:giveWeapon(getWeapon(RangeWeapons[ZombRand(1,#RangeWeapons)]),true) 				
+					--elseif(ZombRand(100) < (ChanceToSpawnWithWep)) then 
+					--	wife:giveWeapon(MeleWeapons[ZombRand(1,#MeleWeapons)],true) 
+					--end
 					
 					GlobalWife = wife
 					
