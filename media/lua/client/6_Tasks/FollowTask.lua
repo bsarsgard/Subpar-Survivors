@@ -173,8 +173,10 @@ function FollowTask:update()
 					
 				end
 			elseif (self.FollowChar:getVehicle() ~= nil) and (self.parent:Get():getVehicle() ~= nil) then
-					ISTimedActionQueue.add(ISSwitchVehicleSeat:new(self.parent:Get(), self.MySeat))
+				--print(self.parent:getName().." switch seat")
+				--ISTimedActionQueue.add(ISSwitchVehicleSeat:new(self.parent:Get(), self.MySeat))
 			elseif (self.FollowChar:getVehicle() == nil) and (self.parent:Get():getVehicle() ~= nil) then
+				print(self.parent:getName().." exit vehicle")
 				self.MySeat = -1
 				ISTimedActionQueue.add(ISExitVehicle:new(self.parent:Get()))
 				self.parent:Wait(1)
