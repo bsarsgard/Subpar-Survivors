@@ -115,7 +115,7 @@ function FindThisTask:update()
 		--self.parent:Speak("here i am")
 		distance = getDistanceBetween(targetSquare,self.parent:Get())
 		
-		if(distance > 2.0) then 
+		if(distance > 2.0) or (targetSquare:getZ() ~= self.parent:Get():getZ()) then 
 			self.parent:walkTo(targetSquare)
 		else
 			if (instanceof(self.TargetItem,"InventoryItem")) and (self.parent:getBag():hasRoomFor(self.parent:Get(),self.TargetItem) == false) then
