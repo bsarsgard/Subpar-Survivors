@@ -77,7 +77,7 @@ function CleanInvTask:update()
 				for i=1, items:size()-1 do
 				local item = items:get(i)
 					if(item ~= nil) then
-						print("drop " .. tostring(item:getDisplayName()) .. " " .. tostring(item:isEquipped()) .. " " .. tostring(self.parent.player:isEquipped(item)) .. tostring(item:getBodyLocation()))
+						--print("drop " .. tostring(item:getDisplayName()) .. " " .. tostring(item:isEquipped()) .. " " .. tostring(self.parent.player:isEquipped(item)) .. tostring(item:getBodyLocation()))
 						if (item:isBroken()) or (
 							(not self.parent.player:isEquipped(item))
 							and (not item:isEquipped())
@@ -91,10 +91,43 @@ function CleanInvTask:update()
 									and (item ~= sweapon)))
 						) then   --and (isItemWater(item) == false) and (item:getCategory() ~= "Food")
 							--self.parent.player:Say("Here i am 1")
-							if ((self.TheDropContainer ~= nil) and (self.TheDropContainer.getContainer ~= nil) and (self.TheDropContainer:getContainer():hasRoomFor(self.parent.player,item)) ) then
-								local container 
+							local container
+							if (self.TheDropContainer ~= nil) then
 								if (self.TheDropContainer:getContainer() ~= nil) then container = self.TheDropContainer:getContainer()
 								else container = self.TheDropContainer end
+							end
+							if (container == nil) then
+								-- try to find a container with similar items
+								local spiral = SpiralSearch:new(self.parent.player:getX(), self.parent.player:getY(), 2)
+
+								for i = spiral:forMax(), 0, -1 do
+									local x = spiral:getX()
+									local y = spiral:getY()
+
+									local sq = getCell():getGridSquare(x, y, self.parent.player:getZ())
+									if(sq ~= nil) then
+										local items = sq:getObjects()
+										-- check containers in square
+										for j=0, items:size()-1 do
+											if(items:get(j):getContainer() ~= nil) then
+												local c = items:get(j):getContainer()
+												if (c ~= nil) and (c:HasType(item:getCat())) then
+													print("found container for " .. tostring(item:getType()))
+													container = c
+												end
+											end
+										end
+									end
+
+									if (container ~= nil) then
+										break
+									end
+
+									spiral:next()
+								end
+							end
+
+							if ((container ~= nil) and (container:hasRoomFor(self.parent.player,item)) ) then
 								--self.parent.player:Say("using ISInventoryTransferAction")
 								ISTimedActionQueue.add(ISInventoryTransferAction:new(self.parent.player, item, inv, container, nil))
 							else -- its a grid square
