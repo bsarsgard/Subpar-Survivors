@@ -1657,8 +1657,14 @@ function SuperSurvivor:update()
 		(
 			(self.TicksSinceSquareChanged > 6)
 			and (self:isInAction() == false)
+			and (
+				self:getCurrentTask() == "None"
+				or self:getCurrentTask() == "Find This"
+				or self:getCurrentTask() == "Find New Building"
+			)
 		) or (self:getCurrentTask() == "Pursue")
 	) then
+		print(self:getName().." Attempt Entry1")
 		self:getTaskManager():AddToTop(AttemptEntryIntoBuildingTask:new(self, self.TargetBuilding))
 		self.TicksSinceSquareChanged = 0
 	end
@@ -2651,14 +2657,26 @@ function SuperSurvivor:FindThisNearBy(itemType, TypeOrCategory)
 						--end
 						--print("FindCatResult: " .. tostring(FindCatResult))
 						
-						if(tempDistance<closestSoFar) and ((TypeOrCategory == "Category") and (FindCatResult ~= nil)) or ((TypeOrCategory == "Type") and (container:FindAndReturn(itemType)) ~= nil) then
+						if(tempDistance<closestSoFar) 
+							and (
+								(TypeOrCategory == "Category")
+								and (FindCatResult ~= nil)
+							) or (
+								(TypeOrCategory == "Type")
+								and (container:FindAndReturn(itemType)) ~= nil
+							) then
 							
 							if (TypeOrCategory == "Category")  then
 								itemtoReturn = FindCatResult
 							else
 								itemtoReturn = container:FindAndReturn(itemType)
 							end
-							closestSoFar = tempDistance
+
+							if itemtoReturn:isBroken() then
+								itemtoReturn = nil
+							else
+								closestSoFar = tempDistance
+							end
 							
 						end	
 					elseif(itemType == "Water") and (items:get(j):hasWater()) and (tempDistance<closestSoFar) then
