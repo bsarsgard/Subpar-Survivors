@@ -173,7 +173,7 @@ function FarmingTask:getAPlantThatNeeds(needs)
 			end
 		end
 		
-	elseif needs == "Harvesting" then
+	elseif (needs == "Harvesting") and (self.parent:getGroupRole() == "Farmer") then -- only harvest if specifically commanded
 	
 		for x=area[1], area[2] do
 			for y=area[3], area[4] do
