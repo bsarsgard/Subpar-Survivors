@@ -99,6 +99,7 @@ function AIManager(TaskMangerIn)
 	-- eat food on person or go find food in building if in building
 	if (false) and (ASuperSurvivor:getAIMode() ~= "Random Solo") and ((ASuperSurvivor:isStarving()) or (ASuperSurvivor:isDyingOfThirst())) then  -- leave group and look for food if starving
 	
+		print(ASuperSurvivor:getName() .. " leaving group because starving")
 		ASuperSurvivor:setAIMode("Random Solo") 
 		if(ASuperSurvivor:getGroupID() ~= nil) then
 			local group = SSGM:Get(ASuperSurvivor:getGroupID())
@@ -111,7 +112,7 @@ function AIManager(TaskMangerIn)
 		
 	elseif (TaskMangerIn:getCurrentTask() ~= "Enter New Building") and (TaskMangerIn:getCurrentTask() ~= "Clean Inventory") and (IsInAction == false) and (TaskMangerIn:getCurrentTask() ~= "Eat Food") and (TaskMangerIn:getCurrentTask() ~= "Find This") and (TaskMangerIn:getCurrentTask() ~= "First Aide")and (TaskMangerIn:getCurrentTask() ~= "Listen") and (((ASuperSurvivor:isHungry()) and (IsInBase)) or ASuperSurvivor:isVHungry() ) and (ASuperSurvivor:getDangerSeenCount() == 0) then
 			--ASuperSurvivor:Speak(tostring(ASuperSurvivor:getNoFoodNearBy()))
-		if(not ASuperSurvivor:hasFood()) and (ASuperSurvivor:getNoFoodNearBy() == false) then
+		if(not ASuperSurvivor:hasFood()) and (ASuperSurvivor:getNoFoodNearBy() == false) and ((getSpecificPlayer(0) == nil) or (not getSpecificPlayer(0):isAsleep())) then
 			--print("go look for food")
 			if(HisGroup) then 
 				local area = HisGroup:getGroupAreaCenterSquare("FoodStorageArea")
@@ -126,7 +127,7 @@ function AIManager(TaskMangerIn)
 		end
 	end
 	if  (TaskMangerIn:getCurrentTask() ~= "Enter New Building") and (IsInAction == false) and (TaskMangerIn:getCurrentTask() ~= "Eat Food") and (TaskMangerIn:getCurrentTask() ~= "Find This") and (TaskMangerIn:getCurrentTask() ~= "First Aide") and (((ASuperSurvivor:isThirsty()) and (IsInBase)) or ASuperSurvivor:isVThirsty() ) and (ASuperSurvivor:getDangerSeenCount() == 0) then
-		if(ASuperSurvivor:getNoWaterNearBy() == false) then
+		if(ASuperSurvivor:getNoWaterNearBy() == false) and ((getSpecificPlayer(0) == nil) or (not getSpecificPlayer(0):isAsleep())) then
 			if(HisGroup) then 
 				local area = HisGroup:getGroupAreaCenterSquare("FoodStorageArea")
 				if(area) then ASuperSurvivor:walkTo(area) end
@@ -319,6 +320,7 @@ function AIManager(TaskMangerIn)
 							-- do indoor stuff to dry off
 							jobScores["Relax"] = jobScores["Relax"] + 3
 							jobScores["Clean Inventory"] = jobScores["Clean Inventory"] + 3
+							jobScores["Wash Self"] = jobScores["Wash Self"] + 2
 						end
 
 						-- personal needs
@@ -512,8 +514,10 @@ function AIManager(TaskMangerIn)
 		end
 		
 		
-		if ((ASuperSurvivor:isStarving()) or (ASuperSurvivor:isVThirsty())) and (ASuperSurvivor:getBaseBuilding() ~= nil) then  -- leave group and look for food if starving
+		if ((ASuperSurvivor:isStarving()) or (ASuperSurvivor:isDyingOfThirst())) and (ASuperSurvivor:getBaseBuilding() ~= nil) then  -- leave group and look for food if starving
 			-- random survivor in base is starving - reset so he goes back out looking for food and re base there
+			print(ASuperSurvivor:getName() .. " leaving group because starving")
+
 			ASuperSurvivor:setAIMode("Random Solo") 
 			if(ASuperSurvivor:getGroupID() ~= nil) then
 				local group = SSGM:Get(ASuperSurvivor:getGroupID())
