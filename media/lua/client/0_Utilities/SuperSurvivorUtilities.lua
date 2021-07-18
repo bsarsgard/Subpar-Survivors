@@ -922,28 +922,28 @@ function GetFoodScore(item)
 	--print("Analyze " .. item:getDisplayName())
 	local Score = 1.0
 
-	if(item:isFresh()) then
-		Score = Score + 2
-		--print("-fresh")
-	elseif(item:IsRotten()) then
-		Score = Score - 5
-		--print("-rotten")
-	end
-
 	if(item:getUnhappyChange() > 0) then
-		Score = Score - math.floor(item:getUnhappyChange() / 10)
-		--print("-unhappy")
+		Score = Score - math.floor(item:getUnhappyChange() / (item:getHungerChange() * -10.0))
+		--print("-unhappy "..Score..","..tostring(item:getUnhappyChange())..","..tostring(0 - item:getHungerChange()))
 	elseif(item:getUnhappyChange() < 0) then
 		Score = Score + 1
 		--print("-happy")
 	end
 
 	if(item:getBoredomChange() > 0) then
-		Score = Score - 1
+		Score = Score - math.floor(item:getBoredomChange() / (0 - item:getBoredomChange()))
 		--print("-bored")
 	elseif(item:getBoredomChange() < 0) then
 		Score = Score + 1
 		--print("-unbored")
+	end
+
+	if(item:isFresh()) then
+		Score = Score + 2
+		--print("-fresh")
+	elseif(item:IsRotten()) then
+		Score = Score - 5
+		--print("-rotten")
 	end
 
 	if(item:isAlcoholic()) then
@@ -988,14 +988,14 @@ end
 function FindAndReturnBestFoodOnFloor(sq, survivor)
 	if(not sq) then return nil end
 	local BestFood = nil
-	local BestScore = 2
+	local BestScore = 1
 
 	if (survivor == nil) or (survivor:isStarving()) then
 		-- if starving, willing to eat anything
-		BestScore = -99
+		BestScore = -999
 	elseif (survivor:isVHungry()) then
 		-- not too picky, eat stale food
-		BestScore = 0
+		BestScore = -10
 	end
 
 	items = sq:getWorldObjects()
@@ -1024,14 +1024,14 @@ function FindAndReturnBestFood(thisItemContainer, survivor)
 	local ID = -1
 	local BestFood = nil
 	--local ContainerItemsScore = {}
-	local BestScore = 2
+	local BestScore = 1
 
 	if (survivor == nil) or (survivor:isStarving()) then
 		-- if starving, willing to eat anything
-		BestScore = -99
+		BestScore = -999
 	elseif (survivor:isVHungry()) then
 		-- not too picky, eat stale food
-		BestScore = 0
+		BestScore = -10
 	end
 
 	if(items ~= nil) and (items:size() > 0) then
