@@ -789,12 +789,11 @@ function SuperSurvivor:needToFollow()
 end
 
 function SuperSurvivor:getNoFoodNearBy()
+	--print(self:getName() .. " nofood " .. tostring((self.Reducer - self.TicksAtLastDetectNoFood)))
 	if (self.NoFoodNear == true) then
 		if (self.TicksAtLastDetectNoFood ~= nil)
-			and (
-				(self.Reducer < self.TicksAtLastDetectNoFood)
-				or ((self.Reducer - self.TicksAtLastDetectNoFood) > 2400)
-			) then self.NoFoodNear = false end
+			and ((self.Reducer - self.TicksAtLastDetectNoFood) > 12000)
+			then self.NoFoodNear = false end
 	end
 	return self.NoFoodNear
 end
@@ -811,7 +810,7 @@ function SuperSurvivor:getNoWaterNearBy()
 		if (self.TicksAtLastDetectNoWater ~= nil)
 			and (
 				(self.Reducer < self.TicksAtLastDetectNoWater)
-				or ((self.Reducer - self.TicksAtLastDetectNoWater) > 2400)
+				or ((self.Reducer - self.TicksAtLastDetectNoWater) > 12900)
 			) then self.NoWaterNear = false end
 	end
 	return self.NoWaterNear
