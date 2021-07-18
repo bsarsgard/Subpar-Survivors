@@ -86,9 +86,13 @@ function SurvivorInfoWindow:Load(ASuperSurvivor)
 	
 	newText = newText .. getText("Tooltip_food_Hunger")..": " .. tostring(math.floor((player:getStats():getHunger()*100)))  .. "\n"
 	newText = newText .. getText("Tooltip_food_Thirst")..": " .. tostring(math.floor((player:getStats():getThirst()*100)))  .. "\n"
-	newText = newText .. "Filth: " .. tostring(math.floor(ASuperSurvivor:getFilth()*100))  .. "\n"
+	newText = newText .. "Morale: " .. tostring(math.floor(player:getStats():getMorale()*100))  .. "\n"
+	newText = newText .. "Sanity: " .. tostring(math.floor(player:getStats():getSanity()*100))  .. "\n"
 	newText = newText .. "Boredom: " .. tostring(math.floor(player:getStats():getBoredom()*100))  .. "\n"
+	newText = newText .. "IdleBoredom: " .. tostring(math.floor(player:getStats():getIdleboredom()*100))  .. "\n"
+	newText = newText .. "Unhappiness: " .. tostring(math.floor(player:getBodyDamage():getUnhappynessLevel()*100))  .. "\n"
 	newText = newText .. "Wetness: " .. tostring(math.floor(player:getBodyDamage():getWetness()*100))  .. "\n"
+	newText = newText .. "Filth: " .. tostring(math.floor(ASuperSurvivor:getFilth()*100))  .. "\n"
 	
 
 	newText = newText .. "\n"
@@ -129,6 +133,7 @@ function SurvivorInfoWindow:Load(ASuperSurvivor)
 	newText = newText .. getText("ContextMenu_SD_SurvivorID")..": " .. tostring(ASuperSurvivor:getID())  .. "\n"
 	newText = newText .. getText("ContextMenu_SD_GroupID")..": " .. tostring(ASuperSurvivor:getGroupID())  .. "\n"
 	newText = newText .. getText("ContextMenu_SD_GroupRole")..": " .. tostring(ASuperSurvivor:getGroupRole())  .. "\n"
+	newText = newText .. "AI mode: " .. tostring(ASuperSurvivor:getAIMode())  .. "\n"
 	
 	self:setText(newText)
 	
