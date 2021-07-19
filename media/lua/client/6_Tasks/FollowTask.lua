@@ -76,7 +76,7 @@ function FollowTask:update()
 			if(ZombRand(2)==0) then self.parent:Speak(getText("ContextMenu_SD_WeLooting")) end
 			self.InBaseAtStart = false 
 		end
-		if(not self.InBaseAtStart) and (self.parent:isInBase()) then 
+		if(not self.InBaseAtStart) and (self.parent:isInBase()) and (self.parent:Get():getVehicle() == nil) then 
 			self.Complete = true 
 			self.parent:Speak(getText("ContextMenu_SD_WeBackToBase"))
 		end
