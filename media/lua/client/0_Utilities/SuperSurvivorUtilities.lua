@@ -931,7 +931,7 @@ function GetFoodScore(item)
 	end
 
 	if(item:getBoredomChange() > 0) then
-		Score = Score - math.floor(item:getBoredomChange() / (0 - item:getBoredomChange()))
+		Score = Score - math.floor(item:getBoredomChange() / (item:getHungerChange() * -10.0) / 2.0)
 		--print("-bored")
 	elseif(item:getBoredomChange() < 0) then
 		Score = Score + 1
@@ -942,7 +942,7 @@ function GetFoodScore(item)
 		Score = Score + 2
 		--print("-fresh")
 	elseif(item:IsRotten()) then
-		Score = Score - 5
+		Score = Score - 10
 		--print("-rotten")
 	end
 
@@ -955,6 +955,12 @@ function GetFoodScore(item)
 		--print("-spice")
 	end
 
+	if(item:isbDangerousUncooked()) and not (item:isCooked()) then
+		Score = Score - 10
+		--print("-dont eat it mary, its raw")
+	end
+	--if(item:isBurnt()) then Score = Score - 1 end
+
 	local FoodType = item:getFoodType()
 	if (FoodType == "NoExplicit") or (FoodType == nil) or (tostring(FoodType) == "nil") then
 		--print("-notype")
@@ -965,16 +971,15 @@ function GetFoodScore(item)
 		if(item:isCooked()) then Score = Score + 5 end
 	elseif (FoodType == "Fruits") or (FoodType == "Vegetables") then
 		--print("-produce")
-		Score = Score + 2
+		Score = Score + 1
 	elseif (FoodType == "Pasta") or (FoodType == "Rice") then
 		--print("-drygoods")
 		Score = Score - 2
 	elseif ((FoodType == "Egg") or (FoodType == "Meat")) or item:isIsCookable() then
 		--print("-meat")
-		if(item:isCooked()) then Score = Score + 3
-		else Score = Score - 5 end
-
-		if(item:isBurnt()) then Score = Score - 1 end
+		if (item:isCooked()) then
+			Score = Score + 2
+		end
 	elseif (FoodType == "Coffee") then
 		--print("-coffee")
 		Score = Score - 5
