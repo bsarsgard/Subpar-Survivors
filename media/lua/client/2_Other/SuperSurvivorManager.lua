@@ -177,12 +177,12 @@ function SuperSurvivorManager:update()
 	
 	for i=1, self.SurvivorCount+1 do
 		if (self.SuperSurvivors[i] ~= nil and self.MainPlayer ~= i) then
-			if (self.SuperSurvivors[i].TargetSquare ~= nil and self.SuperSurvivors[i].TargetSquare:getZ() ~= self.SuperSurvivors[i].player:getZ() and getGameSpeed() ~= 1) then
+			if (self.SuperSurvivors[i].TargetSquare ~= nil and self.SuperSurvivors[i].TargetSquare:getZ() ~= self.SuperSurvivors[i].player:getZ() and getGameSpeed() > 1) then
 				print("DANGER ZONE")
-				self.SuperSurvivors[i].TargetSquare = nil	
+				self.SuperSurvivors[i].TargetSquare = nil
 				self.SuperSurvivors[i]:StopWalk()
 				self.SuperSurvivors[i]:Wait(10)
-				self.SuperSurvivors[i]:getTaskManager():AddToTop(WanderTask:new(self.SuperSurvivors[i])) 
+				--self.SuperSurvivors[i]:getTaskManager():AddToTop(WanderTask:new(self.SuperSurvivors[i]))
 			end
 		end
 	
