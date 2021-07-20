@@ -230,7 +230,7 @@ function LootCategoryTask:update()
 						if(item ~= nil) then
 		
 							local ssquare = getSourceSquareOfItem(item,self.parent.player)
-							print(tostring(ssquare))
+							--print(tostring(ssquare))
 							if(ssquare ~= nil) then
 								local OwnerGroupId = SSGM:GetGroupIdFromSquare(ssquare)
 								local TakerGroupId = self.parent.player:getModData().Group

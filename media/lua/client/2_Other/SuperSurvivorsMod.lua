@@ -221,7 +221,7 @@ function SuperSurvivorsOnTick()
 		elseif(SuperSurvivorSelectingArea) then
 		
 			SuperSurvivorSelectingArea = false
-			print("Done:"..tostring(HighlightX1)..","..tostring(HighlightX2).." : "..tostring(HighlightY1)..","..tostring(HighlightY2))
+			--print("Done:"..tostring(HighlightX1)..","..tostring(HighlightX2).." : "..tostring(HighlightY1)..","..tostring(HighlightY2))
 		end
 		
 		if (Mouse.isLeftPressed()) then SuperSurvivorSelectAreaHOLD = false end
@@ -770,11 +770,11 @@ function supersurvivortemp(keyNum)
 						member:getTaskManager():clear()
 						member:getTaskManager():AddToTop(FollowTask:new(member,mySS:Get()))
 					else
-						print("getClosestMember returned nil")
+						--print("getClosestMember returned nil")
 					end
 				else
 					mySS:DebugSay("no group")
-					print("cant call close member bc no group for player detected")
+					--print("cant call close member bc no group for player detected")
 				end
 			end
 		
@@ -790,11 +790,11 @@ function supersurvivortemp(keyNum)
 						mySS:Get():Say(member:Get():getForname()..", come here.")
 						member:getTaskManager():AddToTop(ListenTask:new(member,mySS:Get(),false))
 					else
-						print("getClosestMember returned nil")
+						--print("getClosestMember returned nil")
 					end
 				else
 					mySS:DebugSay("no group")
-					print("cant call close member bc no group for player detected")
+					--print("cant call close member bc no group for player detected")
 				end
 			end
 		elseif( keyNum == 1) then -- esc key

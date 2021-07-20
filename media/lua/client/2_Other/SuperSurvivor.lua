@@ -461,7 +461,7 @@ function SuperSurvivor:WearThis(ClothingItemName) -- should already be in invent
 		--self.player:initSpritePartsEmpty();
 	elseif ClothingItem:getCategory() == "Clothing" then
 		if ClothingItem:getBodyLocation() ~= "" then
-			print(ClothingItem:getDisplayName() .. " " ..tostring(ClothingItem:getBodyLocation()))
+			--print(ClothingItem:getDisplayName() .. " " ..tostring(ClothingItem:getBodyLocation()))
 			self.player:setWornItem(ClothingItem:getBodyLocation(), nil);
 			self.player:setWornItem(ClothingItem:getBodyLocation(), ClothingItem);
 		end
@@ -564,7 +564,7 @@ function SuperSurvivor:spawnPlayer(square, isFemale)
 	Buddy:getModData().bWalking = false
 	Buddy:getModData().isHostile = false	
 	Buddy:getModData().RWP = SuperSurvivorGetOptionValue("SurvivorFriendliness")
-	print("SuperSurvivorGetOptionValue(SurvivorFriendliness):"..tostring(Buddy:getModData().RWP))
+	--print("SuperSurvivorGetOptionValue(SurvivorFriendliness):"..tostring(Buddy:getModData().RWP))
 	Buddy:getModData().AIMode = "Random Solo"
 	
 	ISTimedActionQueue.clear(Buddy)
@@ -609,7 +609,7 @@ function SuperSurvivor:spawnPlayer(square, isFemale)
 	local desc = Buddy:getDescriptor()
 	desc:setForename(nameToSet)
 	desc:setSurname("")	
-	print("new SS:" .. tostring(Buddy:getBodyDamage():isInfected()))
+	print("new SS:" .. nameToSet .. " " .. tostring(Buddy:getBodyDamage():isInfected()))
 	return Buddy
 
 end
@@ -1430,11 +1430,11 @@ function SuperSurvivor:walkTo(square)
 		local door = self:inFrontOfDoor()
 		if (door ~= nil) and (door:isLocked() or door:isLockedByKey()) then
 			local building = door:getOppositeSquare():getBuilding()
-			if (builing == nil) or (not self.parent:isTargetBuildingClaimed(builing)) then
-				self:DebugSay("little pig, little pig")
-				door:setIsLocked(false)
-				door:setLockedByKey(false)
-			end
+			--if (builing == nil) or (not self.parent:isTargetBuildingClaimed(builing)) then
+			--	self:DebugSay("little pig, little pig")
+			--	door:setIsLocked(false)
+			--	door:setLockedByKey(false)
+			--end
 		end
 		
 		self:WalkToAttempt(square)
@@ -1663,7 +1663,7 @@ function SuperSurvivor:update()
 			)
 		) or (self:getCurrentTask() == "Pursue")
 	) then
-		print(self:getName().." Attempt Entry1")
+		--print(self:getName().." Attempt Entry1")
 		self:getTaskManager():AddToTop(AttemptEntryIntoBuildingTask:new(self, self.TargetBuilding))
 		self.TicksSinceSquareChanged = 0
 	end
@@ -1675,11 +1675,11 @@ function SuperSurvivor:update()
 	end
 	
 	if ((self.TicksSinceSquareChanged > 7) and (self:Get():getModData().bWalking == true)) or (self.TicksSinceSquareChanged > 500) then
-		print("detected survivor stuck walking: " .. self:getName() .. " for " .. self.TicksSinceSquareChanged .. " x" .. self.StuckCount)
+		--print("detected survivor stuck walking: " .. self:getName() .. " for " .. self.TicksSinceSquareChanged .. " x" .. self.StuckCount)
 		self.StuckCount = self.StuckCount + 1
 	--elseif ((self.TicksSinceSquareChanged > 10) and (self:Get():getModData().bWalking == true)) then
 		if (self.StuckCount > 100) then
-			print("trying to knock survivor out of frozen state: " .. self:getName());
+			--print("trying to knock survivor out of frozen state: " .. self:getName());
 			self.StuckCount = 0
 			ISTimedActionQueue.add(ISGetHitFromBehindAction:new(self.player,getSpecificPlayer(0)))
 		else
@@ -1733,12 +1733,6 @@ function SuperSurvivor:OnDeath()
 
 	-- Cannibal support
 	if not self.player:getBodyDamage():isInfected() then
-		--for i=1, ZombRand(1,10) do
-		--	self.player:getInventory():AddItem("Base.PorkChop")
-		--end
-		--for i=1, ZombRand(1,10) do
-		--	self.player:getInventory():AddItem("Base.Steak")
-		--end
 		for i=1, ZombRand(1,10) do
 			self.player:getInventory():AddItem("Subpar.StrangeMeat")
 		end
@@ -2047,12 +2041,12 @@ function SuperSurvivor:ReadyGun(weapon)
 		weapon:setJammed(false)
 	end	
 	
-	print("readygun " .. weapon:getCurrentAmmoCount() .. " " .. weapon:getMaxAmmo() .. " " .. self.EnemiesOnMe .. " " .. self.seenCount)
+	--print("readygun " .. weapon:getCurrentAmmoCount() .. " " .. weapon:getMaxAmmo() .. " " .. self.EnemiesOnMe .. " " .. self.seenCount)
 	
 	if weapon:haveChamber() and not weapon:isRoundChambered() then
 		if(ISReloadWeaponAction.canRack(weapon)) then
 			ISReloadWeaponAction.OnPressRackButton(self.player, weapon)
-			print(self:getName().." needs to rack gun")
+			--print(self:getName().." needs to rack gun")
 			return true		
 		end	
 	end
@@ -2060,11 +2054,11 @@ function SuperSurvivor:ReadyGun(weapon)
 	if(weapon:getMagazineType()) then
 
 		if(weapon:isContainsClip() == false) then
-			print(self:getName().." gun needs a magazine0:"..tostring(weapon:getMagazineType()))
+			--print(self:getName().." gun needs a magazine0:"..tostring(weapon:getMagazineType()))
 			local magazine = weapon:getBestMagazine(self.player)
 			if(magazine == nil) then magazine = self.player:getInventory():getFirstTypeRecurse(weapon:getMagazineType()) end
 			if(magazine == nil) then 
-				print(self:getName().." needs to spawn magazine1:" .. tostring(weapon:getMagazineType()))
+				--print(self:getName().." needs to spawn magazine1:" .. tostring(weapon:getMagazineType()))
 				magazine = self.player:getInventory():AddItem(weapon:getMagazineType()); 
 			end
 			
@@ -2075,12 +2069,12 @@ function SuperSurvivor:ReadyGun(weapon)
 					magazine:setCurrentAmmoCount(magazine:getMaxAmmo())
 				end
 				
-				print(self:getName().." trying to load magazine into gun")
+				--print(self:getName().." trying to load magazine into gun")
 				ISTimedActionQueue.add(ISInsertMagazine:new(self.player, weapon, magazine))
 				ISReloadWeaponAction.ReloadBestMagazine(self.player, weapon)
 				return	true		
 			else
-				print(self:getName().." error trying to spawn mag for gun?")
+				--print(self:getName().." error trying to spawn mag for gun?")
 			end			
 		end
 		
@@ -2089,35 +2083,35 @@ function SuperSurvivor:ReadyGun(weapon)
 			local magazine = weapon:getBestMagazine(self.player)
 			if(magazine == nil) then magazine = self.player:getInventory():getFirstTypeRecurse(weapon:getMagazineType()) end
 			if(magazine == nil) then 
-				print(self:getName().." needs to spawn magazine2:" .. tostring(weapon:getMagazineType()))
+				--print(self:getName().." needs to spawn magazine2:" .. tostring(weapon:getMagazineType()))
 				magazine = self.player:getInventory():AddItem(weapon:getMagazineType()); 
 			end
 			if(self:gunAmmoInInvCount(weapon) < 1) and (SurvivorInfiniteAmmo) then
 				
 				local maxammo = magazine:getMaxAmmo()
 				local amtype = magazine:getAmmoType()
-				print(self:getName().." needs to spawn "..tostring(maxammo).." x " .. tostring(amtype))
+				--print(self:getName().." needs to spawn "..tostring(maxammo).." x " .. tostring(amtype))
 				for i=0, maxammo do
 					local am = instanceItem(amtype)
 					self.player:getInventory():AddItem(am)
 				end
 			elseif(self:gunAmmoInInvCount(weapon) < 1) and (not ISReloadWeaponAction.canShoot(weapon)) and (not SurvivorInfiniteAmmo) then
-				print(self:getName().." no clip ammo left")
+				--(self:getName().." no clip ammo left")
 				return false
 			end
 			
 			if (self:gunAmmoInInvCount(weapon) < 1) and (weapon:getCurrentAmmoCount() > 0) then
-				print(self:getName().." out of bullets but mag not empty, keep firing")		
+				--print(self:getName().." out of bullets but mag not empty, keep firing")		
 				return true
 			elseif (self.EnemiesOnMe == 0 and self.seenCount == 0 and weapon:getCurrentAmmoCount() < weapon:getMaxAmmo()) or (weapon:getCurrentAmmoCount() == 0) then
 				ISTimedActionQueue.add(ISEjectMagazine:new(self.player, weapon))
 			
 				-- reload the ejected magazine and insert it
-				print(self:getName().." needs to reload the ejected magazine and insert it")
+				--print(self:getName().." needs to reload the ejected magazine and insert it")
 				ISTimedActionQueue.queueActions(self.player, ISReloadWeaponAction.ReloadBestMagazine, weapon)
 				return true
 			else 
-				print(self:getName().." mag already full (enough)")				
+				--print(self:getName().." mag already full (enough)")				
 				return true
 			end
 		end
@@ -2191,7 +2185,7 @@ function SuperSurvivor:gunAmmoInInvCount(gun)
 		--if bullets and not bullets:isEmpty() then
 			--self.bullets = bullets;
 			--self.ammoCount = ammoCount;
-			print(self:getName().." has " ..  tostring(ammoCount) .." x " .. tostring(ammoType))
+			--print(self:getName().." has " ..  tostring(ammoCount) .." x " .. tostring(ammoType))
 			return ammoCount
 		--end
 	end
@@ -2278,7 +2272,7 @@ function SuperSurvivor:giveWeapon(weaponType,equipIt )
 		self.player:getModData().ammoCount = self:FindAndReturnCount(ammotypes[1])
 		
 	else
-		print("no ammo types for weapon:"..weapon:getType())
+		--print("no ammo types for weapon:"..weapon:getType())
 	end
 end
 
@@ -2358,7 +2352,7 @@ function SuperSurvivor:WeaponReady()
 					local groupcount = tempBullet:getCount()
 					local count = 0
 					if ORGMEnabled then 
-						print(ammoBox:getType())
+						--print(ammoBox:getType())
 						count = ORGM.getAmmoData(ammotype).BoxCount
 					else
 						count = (getBoxCount(ammoBox:getType()) / groupcount)
@@ -2625,12 +2619,13 @@ function SuperSurvivor:FindThisNearBy(itemType, TypeOrCategory)
 		--for x=minx, maxx do
 		--	for y=miny, maxy do
 		local spiral = SpiralSearch:new(self.player:getX(), self.player:getY(), range)
+		local x, y
 		--print(spiral:forMax())
 
 		for i = spiral:forMax(), 0, -1 do
 					
-			local x = spiral:getX()
-			local y = spiral:getY()
+			x = spiral:getX()
+			y = spiral:getY()
 			--print(x .. ", " .. y)
 
 			sq = getCell():getGridSquare(x,y,z);
@@ -2788,7 +2783,7 @@ end
 
 
 function SuperSurvivor:SuitUp(SuitName)
-		print("Suiting up with:"..SuitName)
+		--print("Suiting up with:"..SuitName)
 
 		-- reset
 		self.player:clearWornItems();
@@ -3052,12 +3047,12 @@ function SuperSurvivor:CleanUp(percent)
 							blood = item:getBlood(part);
 							item:setBlood(part, (blood * percent));
 						else
-							print("coveredParts(j) was nil")
+							--print("coveredParts(j) was nil")
 						end
 						
 					end
 				else
-					print("BloodClothingType.getCoveredParts was nil")
+					--print("BloodClothingType.getCoveredParts was nil")
 				end
 			end
 			
@@ -3077,7 +3072,7 @@ end
 
 function SuperSurvivor:isEnemyInRange(enemy)
 	if not enemy then 
-		print(self:getName().." enemy is nil")
+		--print(self:getName().." enemy is nil")
 		return false 
 	end
 	

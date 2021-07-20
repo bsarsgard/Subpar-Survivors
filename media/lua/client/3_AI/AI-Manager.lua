@@ -139,7 +139,7 @@ function AIManager(TaskMangerIn)
 	if((ASuperSurvivor:Get():getModData().InitGreeting ~= nil) or (ASuperSurvivor:getAIMode() == "Random Solo")) and (TaskMangerIn:getCurrentTask() ~= "Listen") and (TaskMangerIn:getCurrentTask() ~= "Surender") and (TaskMangerIn:getCurrentTask() ~= "Flee From Spot") and (TaskMangerIn:getCurrentTask() ~= "Take Gift") and (ASuperSurvivor.LastSurvivorSeen ~= nil) and (ASuperSurvivor.LastSurvivorSeen:isGhostMode() == false) and (ASuperSurvivor:getSpokeTo(ASuperSurvivor.LastSurvivorSeen:getModData().ID) == false) and (getDistanceBetween(ASuperSurvivor.LastSurvivorSeen,ASuperSurvivor:Get()) < 8) and (ASuperSurvivor:getDangerSeenCount()==0) and (TaskMangerIn:getCurrentTask() ~= "First Aide") and (ASuperSurvivor:Get():CanSee(ASuperSurvivor.LastSurvivorSeen)) then
 			ASuperSurvivor:Speak(getText("ContextMenu_SD_HeyYou"))
 			ASuperSurvivor:SpokeTo(ASuperSurvivor.LastSurvivorSeen:getModData().ID)
-			print(ASuperSurvivor:getName() .. " adding listen task")
+			--print(ASuperSurvivor:getName() .. " adding listen task")
 			TaskMangerIn:AddToTop(ListenTask:new(ASuperSurvivor,ASuperSurvivor.LastSurvivorSeen,true))
 	end
 		
@@ -244,7 +244,7 @@ function AIManager(TaskMangerIn)
 				TaskMangerIn:AddToTop(FollowTask:new(ASuperSurvivor,getSpecificPlayer(0))) 	
 
 			elseif(SurvivorsFindWorkThemselves) then
-				print("yes im a worker: "..tostring(ASuperSurvivor:Get():getBodyDamage():getWetness()))
+				--print("yes im a worker: "..tostring(ASuperSurvivor:Get():getBodyDamage():getWetness()))
 
 				--if(RainManager.isRaining()) and (ASuperSurvivor:Get():getBodyDamage():getWetness() > 0.5) and (ASuperSurvivor:Get():isOutside()) and (TaskMangerIn.TaskUpdateLimit ~= 0) and (TaskMangerIn:getCurrentTask() ~= "Enter New Building") and (TaskMangerIn:getCurrentTask() ~= "Find Building") then
 				--	ASuperSurvivor:Speak(getText("ContextMenu_SD_RainingGoInside"))
@@ -254,7 +254,7 @@ function AIManager(TaskMangerIn)
 				--end
 
 				if (ASuperSurvivor:Get():getBodyDamage():getWetness() < 0.2) then
-					print(ASuperSurvivor:getName().."/" .. ASuperSurvivor:getGroupRole() .." yes i should look for work")
+					--print(ASuperSurvivor:getName().."/" .. ASuperSurvivor:getGroupRole() .." yes i should look for work")
 					if(SafeToGoOutAndWork) then
 						TaskMangerIn:setTaskUpdateLimit(AutoWorkTaskTimeLimit)
 						
@@ -347,13 +347,13 @@ function AIManager(TaskMangerIn)
 
 						-- find the best task
 						for key, value in pairs(jobScores) do
-							print(key..":"..tostring(value))
+							--print(key..":"..tostring(value))
 							if value >= jobScores[job] then job = key end
 						end
 
 						--local randresult = ZombRand(6) + 1
 						ASuperSurvivor:Get():getStats():setBoredom(ASuperSurvivor:Get():getStats():getBoredom() + 0.1)
-						print("job result is:"..tostring(job))
+						--print("job result is:"..tostring(job))
 						if(job == "Relax") then
 							ASuperSurvivor:Speak(getText("ContextMenu_SD_IGoRelax"))
 							ASuperSurvivor:Get():getStats():setBoredom(0.0)

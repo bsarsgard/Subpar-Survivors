@@ -202,7 +202,7 @@ function getGunShotWoundBP(player)
 	local result = ZombRand(1,#list)
 	local index = list[result]
 	local outBP = bps:get(index)
-	print("body part found was: " .. tostring(outBP))
+	--print("body part found was: " .. tostring(outBP))
 	return outBP
 	
 end
@@ -320,10 +320,10 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 				--victim:getBodyDamage():DamageFromWeapon(weapon);
 				victim:update();
 				
-				print("shotPartshotPart is " .. tostring(shotPartshotPart:getHealth()) ) 
+				--print("shotPartshotPart is " .. tostring(shotPartshotPart:getHealth()) ) 
 				
 			end
-			print("post getHealth is " .. tostring(victim:getBodyDamage():getHealth()) ) 
+			--print("post getHealth is " .. tostring(victim:getBodyDamage():getHealth()) ) 
 	
 	
 	if instanceof(victim, "IsoPlayer") then	

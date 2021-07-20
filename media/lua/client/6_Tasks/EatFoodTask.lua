@@ -103,7 +103,7 @@ function EatFoodTask:update()
 			elseif (((HungerChange * 0.50) + hunger) < 0.15) then self.eatthisMuch  = 0.50
 			elseif (((HungerChange * 0.75) + hunger) < 0.15) then self.eatthisMuch = 0.75
 			else self.eatthisMuch = 1.00 end	
-			print(self.parent:getName() .. " eat " .. tostring(hunger)..","..tostring(HungerChange)..","..tostring(self.eatthisMuch))
+			--print(self.parent:getName() .. " eat " .. tostring(hunger)..","..tostring(HungerChange)..","..tostring(self.eatthisMuch))
 		
 			self.parent:Speak(getText("ContextMenu_SD_EatFood_Before") .. self.TheFood:getDisplayName() .. getText("ContextMenu_SD_EatFood_After"));
 			self.parent:StopWalk()

@@ -57,12 +57,13 @@ function FindUnlootedBuildingTask:update()
 			
 			--print("loot building")
 			local spiral = SpiralSearch:new(self.parent.player:getX(), self.parent.player:getY(), range)
+			local x, y
 			--for x=minx, maxx do
 			--	for y=miny, maxy do
 			for i = spiral:forMax(), 0, -1 do
 						
-				local x = spiral:getX()
-				local y = spiral:getY()
+				x = spiral:getX()
+				y = spiral:getY()
 				--print(x .. ", " .. y)
 
 				local Square = getCell():getGridSquare(x,y,0)

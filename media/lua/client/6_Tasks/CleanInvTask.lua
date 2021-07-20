@@ -99,20 +99,21 @@ function CleanInvTask:update()
 							if (container == nil) then
 								-- try to find a container with similar items
 								local spiral = SpiralSearch:new(self.parent.player:getX(), self.parent.player:getY(), 2)
+								local x, y, sq, items
 
 								for i = spiral:forMax(), 0, -1 do
-									local x = spiral:getX()
-									local y = spiral:getY()
+									x = spiral:getX()
+									y = spiral:getY()
 
-									local sq = getCell():getGridSquare(x, y, self.parent.player:getZ())
+									sq = getCell():getGridSquare(x, y, self.parent.player:getZ())
 									if(sq ~= nil) then
-										local items = sq:getObjects()
+										items = sq:getObjects()
 										-- check containers in square
 										for j=0, items:size()-1 do
 											if(items:get(j):getContainer() ~= nil) then
 												local c = items:get(j):getContainer()
 												if (c ~= nil) and (c:HasType(item:getCat())) then
-													print("found container for " .. tostring(item:getType()))
+													--print("found container for " .. tostring(item:getType()))
 													container = c
 												end
 											end

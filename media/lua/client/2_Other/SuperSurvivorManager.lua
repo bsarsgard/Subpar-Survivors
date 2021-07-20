@@ -74,8 +74,8 @@ function SuperSurvivorManager:LoadSurvivor(ID, square)
 		if(self.SuperSurvivors[ID]:Get():getModData().isHostile == true) then self.SuperSurvivors[ID]:setHostile(true) end
 		
 		if(self.SurvivorCount == nil) then self.SurvivorCount = 1 end
-		print(tostring(ID))
-		print(tostring(self.SurvivorCount))
+		--print(tostring(ID))
+		--print(tostring(self.SurvivorCount))
 		
 		if(ID > self.SurvivorCount) then self.SurvivorCount = ID end
 		self.SuperSurvivors[ID].player:getModData().LastSquareSaveX = nil

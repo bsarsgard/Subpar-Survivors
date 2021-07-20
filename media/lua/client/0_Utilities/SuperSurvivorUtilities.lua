@@ -49,7 +49,7 @@ function getCoordsFromID(id)
 	for k,v in pairs(SurvivorMap) do
 
 		for i=1,#v do
-			print(tostring(k)..","..tostring(v[i]))
+			--print(tostring(k)..","..tostring(v[i]))
 			if(v[i] == id) then return k end
 		end
 
@@ -984,7 +984,7 @@ function GetFoodScore(item)
 		--print("-coffee")
 		Score = Score - 5
 	else
-		print("Unknown food type " .. FoodType)
+		--print("Unknown food type " .. FoodType)
 	end
 
 	return Score
@@ -1266,12 +1266,12 @@ end
 
 -- Creates a spiral around a point to get squares in order of proximity for searching nearby
 SpiralSearch = {}
-SpiralSearch.__index = SpiralSearch
+--SpiralSearch.__index = SpiralSearch
 
 function SpiralSearch:new(x, y, range)
 	local o = {}
 	setmetatable(o, self)
-	self.__index = self
+	--self.__index = self
 
 	o.x = math.floor(x)
 	o.y = math.floor(y)

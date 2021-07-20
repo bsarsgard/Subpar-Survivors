@@ -579,7 +579,7 @@ function SuperSurvivorPresetSpawn(square)
 						if(RPresetSpawns[i].PerkLevel == nil) then level = ZombRand(3,9)
 						else level = RPresetSpawns[i].PerkLevel end
 						local count = 0;
-						print("leveling perk: "..tostring(perk))
+						--print("leveling perk: "..tostring(perk))
 						while(count < level) do
 							SuperSurvivor.player:LevelPerk(perk);
 							count = count + 1;

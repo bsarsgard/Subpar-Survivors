@@ -42,7 +42,7 @@ function SuperSurvivorGroup:getFollowCount()
 	local members = self:getMembers()
 	for i=1,#members do
 		if(members[i] ~= nil) and (members[i].getCurrentTask ~= nil) then
-			print("SS current task: " .. members[i]:getCurrentTask())
+			--print("SS current task: " .. members[i]:getCurrentTask())
 			if(members[i]:getCurrentTask() == "Follow") then count = count + 1 end
 		end
 	end
@@ -234,7 +234,7 @@ function SuperSurvivorGroup:getClosestMember(ofThisRole,referencePoint)
 			if(workingSS ~= nil) then
 				
 				distance = getDistanceBetween(workingSS:Get(),referencePoint)	
-				print(tostring(self.Members[i])..","..tostring(distance))				
+				--print(tostring(self.Members[i])..","..tostring(distance))				
 				if(distance ~= 0) and (distance < closestSoFar) and ((ofThisRole == nil) or (SSM:Get(self.Members[i]):getGroupRole() == ofThisRole) or (ofThisRole == "Any")) then
 					closestID = self.Members[i]
 					closestSoFar = distance
@@ -349,7 +349,7 @@ function SuperSurvivorGroup:addMember(newSurvivor, Role)
 		currentGroup:removeMember(newSurvivor:getID())
 		print("removed " .. newSurvivor:getName() .. " from current group")
 	else
-		print("no current group")
+		--print("no current group")
 	end
 	
 	

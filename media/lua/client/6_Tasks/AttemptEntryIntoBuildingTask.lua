@@ -81,14 +81,14 @@ function AttemptEntryIntoBuildingTask:update()
 			local door = self.parent:inFrontOfDoor()
 			
 			if self.TryWindow == false and (door ~= nil) and (door:isLocked() or door:isLockedByKey())  then
-				if (not self.parent:isTargetBuildingClaimed(self.parent.TargetBuilding)) then
-					-- little pig, little pig
-					door:setIsLocked(false)
-					door:setLockedByKey(false)
-				else
+				--if (not self.parent:isTargetBuildingClaimed(self.parent.TargetBuilding)) then
+				--	-- little pig, little pig
+				--	door:setIsLocked(false)
+				--	door:setLockedByKey(false)
+				--else
 					self.TryWindow = true
 					self.Door = door
-				end
+				--end
 			end
 			
 			if(self.parent:inFrontOfWindow()) then
