@@ -561,6 +561,7 @@ end
 --Events.OnCharacterCollide.Add(SuperSurvivorsOnCharacterCollide)
 
 function SuperSurvivorsOnSwing(player,weapon)
+	--print("onswing")
 
 	local ID = player:getModData().ID
 	if(ID ~= nil) then

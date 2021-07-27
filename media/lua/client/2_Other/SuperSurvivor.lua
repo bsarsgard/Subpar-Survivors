@@ -1384,7 +1384,9 @@ function SuperSurvivor:isInAction()
 	
     local queue = ISTimedActionQueue.queues[self.player]
     if queue == nil then return false end
-    for k,v in ipairs(queue.queue) do
+    --for k,v in ipairs(queue.queue) do
+	for k=1, #queue.queue do
+		local v = queue.queue[k]
         if v then 
 			--print(self:getName().." returing true2")
 			return true 
@@ -1399,7 +1401,9 @@ function SuperSurvivor:isWalking()
 	
     local queue = ISTimedActionQueue.queues[self.player]
     if queue == nil then return false end
-    for k,v in ipairs(queue.queue) do
+    --for k,v in ipairs(queue.queue) do
+	for k=1, #queue.queue do
+		local v = queue.queue[k]
         if v then return true end
     end
 	return false;
@@ -2485,10 +2489,28 @@ function SuperSurvivor:Attack(victim)
 				self.player:NPCSetAttack(true);
 				self.player:NPCSetMelee(true);  
 				self.player:AttemptAttack(10.0);
+				--self.player:DoAttack(0);
+				local gameVersion = getCore():getGameVersion()
+				if gameVersion:getMajor() >= 41 and gameVersion:getMinor() > 50 then
+					victim:Hit(nil, self.player, 0, true, 0, false);
+				end
 			else
 				--self:Speak("Attack!"..tostring(distance).."/"..tostring(minrange))
 				self.player:NPCSetAttack(true);
 				self.player:NPCSetMelee(false);
+				--self.player:DoAttack(0);
+				local gameVersion = getCore():getGameVersion()
+				if gameVersion:getMajor() >= 41 and gameVersion:getMinor() > 50 then
+					local weapon = self.player:getPrimaryHandItem();
+					local damage = 0
+					if (weapon ~= nil) then
+						--damage = ZombRand(weapon:getMinDamage(), weapon:getMaxDamage());
+						damage = weapon:getMaxDamage();
+					end
+					local shoveMaybe = false;
+					local multiplier = 1.0; -- i dont know what this is
+					victim:Hit(weapon, self.player, damage, shoveMaybe, multiplier, false);
+				end
 			end
 			
 		end
@@ -3033,7 +3055,9 @@ function SuperSurvivor:CleanUp(percent)
 		end
 		
 
-	for i,item in ipairs(washList) do
+	--for i,item in ipairs(washList) do
+	for i=1, #washList do
+		local item = washList[i]
 		--print("wash loop: "..tostring(item))
 		
 		local blood

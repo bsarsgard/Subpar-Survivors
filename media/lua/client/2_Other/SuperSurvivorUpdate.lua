@@ -209,6 +209,7 @@ end
 
 
 function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
+	--print("weaponhitcharacter")
 
 	--if wielder ~= nil then print("PVP " .. tostring(wielder:getForname())) end
 	--if victim ~= nil then print("hit " .. tostring(victim:getForname())) end
@@ -369,3 +370,20 @@ end
 Events.OnWeaponHitCharacter.Add(SuperSurvivorPVPHandle);
 Events.OnPlayerUpdate.Add(SuperSurvivorGlobalUpdate);
 Events.OnCharacterDeath.Add(SuperSurvivorOnDeath);
+
+--function test1(wielder, weapon)
+--	print "test1"
+--end
+--Events.OnWeaponSwingHitPoint.Add(test1);
+--function test2(wielder, weapon)
+--	print "attackfinished"
+--end
+--Events.OnPlayerAttackFinished.Add(test2);
+--function test3(character, chargeDelta, weapon)
+--	print("hookattack "..tostring(weapon))
+--end
+--Hook.Attack.Add(test3);
+--function test4()
+--	print "hitzombie"
+--end
+--Events.OnHitZombie.Add(test4)
