@@ -46,7 +46,9 @@ end
 
 function GroupWindow:setSelected(CodeName)
 	
-	for i,v in ipairs(self.HomeWindow.items) do
+	--for i,v in ipairs(self.HomeWindow.items) do
+	for i=1, #self.HomeWindow.items do
+		local v = self.HomeWindow.items[i]
 		--print(tostring(v.item).. "==".. tostring(CodeName))
 		if v.item == CodeName then
 			self.HomeWindow.mouseoverselected = i
@@ -89,7 +91,9 @@ function GroupWindow:Update()
 			Group:setLeader(0)
 		end
 		
-		for index,value in ipairs(MyGroupMembers) do
+		--for index,value in ipairs(MyGroupMembers) do
+		for index=1, #MyGroupMembers do
+			local value = MyGroupMembers[index]
 			local name, role
 			
 			if(value.getName ~= nil) and (value:isInCell())then

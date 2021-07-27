@@ -239,7 +239,9 @@ function ISInventoryTransferAction:perform()
 			loot:selectButtonForContainer(self.selectedContainer)
 		end
 	end
-	for i,item in ipairs(queuedItem.items) do
+	--for i,item in ipairs(queuedItem.items) do
+	for i=1, #queuedItem.items do
+		local item = queuedItem.items[i]
 		self.item = item
 		-- Check destination container capacity and item-count limit.
 		if not self:isValid() then
@@ -511,7 +513,9 @@ function ISInventoryTransferAction:checkQueueList()
 		-- limit this to 20 items (so transfer 20 per 20 nails)
 		-- only for item with weight < 0.1
 		if round(action.item:getWeight(), 3) <= 0.1 then
-			for i,v in ipairs(self.queueList) do
+			--for i,v in ipairs(self.queueList) do
+			for k=1, #self.queueList do
+				local v = self.queueList[k]
 				if v.type == action.item:getFullType() and #v.items < 20 then
 	--				print("found same type in list", action.item:getFullType())
 					table.insert(v.items, action.item)

@@ -479,8 +479,7 @@ function AIManager(TaskMangerIn)
 				TaskMangerIn:AddToTop(LootCategoryTask:new(ASuperSurvivor,ASuperSurvivor.TargetBuilding,"Food",0))
 			end
 		end
-		--turning this off for now, somehow already used group ids being given as new ones?
-		if(true) and (ASuperSurvivor:getBaseBuilding() == nil) and (ASuperSurvivor:getBuilding()) and (TaskMangerIn:getCurrentTask() ~= "First Aide") and (TaskMangerIn:getCurrentTask() ~= "Attack") and (TaskMangerIn:getCurrentTask() ~= "Barricade Building") and (ASuperSurvivor:hasWeapon())  and (ASuperSurvivor:hasFood()) then
+		if (ASuperSurvivor:getBaseBuilding() == nil) and (ASuperSurvivor:getBuilding()) and (TaskMangerIn:getCurrentTask() ~= "First Aide") and (TaskMangerIn:getCurrentTask() ~= "Attack") and (TaskMangerIn:getCurrentTask() ~= "Barricade Building") and (ASuperSurvivor:hasWeapon())  and (ASuperSurvivor:hasFood()) then
 			TaskMangerIn:clear()
 			ASuperSurvivor:setBaseBuilding(ASuperSurvivor:getBuilding())
 			TaskMangerIn:AddToTop(WanderInBuildingTask:new(ASuperSurvivor,ASuperSurvivor:getBuilding()))
@@ -489,7 +488,7 @@ function AIManager(TaskMangerIn)
 			ASuperSurvivor:Speak("This will be my base.")
 			print(ASuperSurvivor:getName() .. " making base")
 			local GroupId = SSGM:GetGroupIdFromSquare(ASuperSurvivor:Get():getCurrentSquare())
-			ASuperSurvivor:Speak(tostring(GroupId))
+			--ASuperSurvivor:Speak(tostring(GroupId))
 			if(GroupId == -1) then -- if the base this npc is gonna stay in is not declared as another base then they set it as thier base.
 				print("New base")
 				local nGroup = SSGM:newGroup()					

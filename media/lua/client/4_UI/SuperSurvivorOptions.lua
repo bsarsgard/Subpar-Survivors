@@ -199,12 +199,12 @@ end
 -- We need to use the global keyBinding table, this stores all our binding values
 local index = nil -- index will be the position we want to insert into the table
 for i,b in ipairs(keyBinding) do
-    -- we need to find the index of the item we want to insert after
-    -- in this case its "Equip/Unequip Stab weapon"
-    if b.value == "Shout" then
-        index = i -- found the index, set it and break from the loop
-        break
-    end
+	-- we need to find the index of the item we want to insert after
+	-- in this case its "Equip/Unequip Stab weapon"
+	if b.value == "Shout" then
+		index = i -- found the index, set it and break from the loop
+		break
+	end
 end
 
 if index then

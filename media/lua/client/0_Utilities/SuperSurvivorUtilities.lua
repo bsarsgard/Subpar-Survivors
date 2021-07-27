@@ -188,7 +188,9 @@ end
 
 function has_value (tab, val)
 	if(tab ~= nil) and (val ~= nil) then
-		for index, value in ipairs (tab) do
+		--for index, value in ipairs (tab) do
+		for k=1, #tab do
+			local value = tab[k]
 			if value == val then
 				return true
 			end
@@ -378,7 +380,9 @@ function getAmmoBullets(weapon,incModule)
 		if(isModEnabled("ORGM")) then
 		  local ammoTbl = ORGM.AlternateAmmoTable[getAmmoType(weapon,false)]
 		  if (ammoTbl) then
-		   for _, name in ipairs(ammoTbl) do
+		   --for _, name in ipairs(ammoTbl) do
+		   for k=1, #ammoTbl do
+			local name = ammoTbl[k]
 			if(incModule) then table.insert(bullets,"ORGM."..name)
 			else table.insert(bullets,name) end
 		   end
