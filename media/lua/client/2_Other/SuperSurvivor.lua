@@ -1318,6 +1318,7 @@ function SuperSurvivor:DoVision()
 	
 	
 	if(spottedList ~= nil) then
+		--print("dovision " .. tostring(spottedList:size()))
 		for i=0, spottedList:size()-1 do
 			local character = spottedList:get(i);
 			if(character ~= nil) and (character ~= self.player) and (instanceof(character,"IsoZombie") or instanceof(character,"IsoPlayer")) then
@@ -1325,7 +1326,7 @@ function SuperSurvivor:DoVision()
 				if (character:isDead() == false) then
 					tempdistance = tonumber(getDistanceBetween(character,self.player))
 					
-					if( self:isEnemy(character) ) then	
+					if( (tempdistance <= atLeastThisClose) and self:isEnemy(character) ) then	
 					
 						local CanSee = self:RealCanSee(character)
 						
@@ -1340,7 +1341,7 @@ function SuperSurvivor:DoVision()
 								self.dangerSeenCount = self.dangerSeenCount + 1 
 							end 
 						end
-						if( ( CanSee or (tempdistance < 0.5))  and (tempdistance < closestSoFar) and (tempdistance <= atLeastThisClose) ) then
+						if( ( CanSee or (tempdistance < 0.5)) and (tempdistance < closestSoFar) ) then
 							closestSoFar = tempdistance ;
 							self.player:getModData().seenZombie = true;
 							closestNumber = i;							
@@ -2490,8 +2491,7 @@ function SuperSurvivor:Attack(victim)
 				self.player:NPCSetMelee(true);  
 				self.player:AttemptAttack(10.0);
 				--self.player:DoAttack(0);
-				local gameVersion = getCore():getGameVersion()
-				if gameVersion:getMajor() >= 41 and gameVersion:getMinor() > 50 then
+				if IsDamageBroken then
 					victim:Hit(nil, self.player, 0, true, 0, false);
 				end
 			else
@@ -2500,7 +2500,7 @@ function SuperSurvivor:Attack(victim)
 				self.player:NPCSetMelee(false);
 				--self.player:DoAttack(0);
 				local gameVersion = getCore():getGameVersion()
-				if gameVersion:getMajor() >= 41 and gameVersion:getMinor() > 50 then
+				if IsDamageBroken then
 					local weapon = self.player:getPrimaryHandItem();
 					local damage = 0
 					if (weapon ~= nil) then

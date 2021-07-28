@@ -336,6 +336,9 @@ function SuperSurvivorsLoadGridsquare(square)
 			SSGM:Load()
 			HillTopGroup:AllSpokeTo()
 			BlockadeGroup:AllSpokeTo()
+
+			local gameVersion = getCore():getGameVersion()
+			IsDamageBroken = (gameVersion:getMajor() >= 41 and gameVersion:getMinor() > 50)
 			
 			SuperSurvivorBravery = SuperSurvivorGetOptionValue("Bravery")
 			NoPreSetSpawn = SuperSurvivorGetOptionValue("NoPreSetSpawn")
@@ -346,6 +349,9 @@ function SuperSurvivorsLoadGridsquare(square)
 			ChanceToSpawnWithWep = SuperSurvivorGetOptionValue("WepSpawnRate")
 			ChanceToBeHostileNPC = SuperSurvivorGetOptionValue("HostileSpawnRate")
 			MaxChanceToBeHostileNPC = SuperSurvivorGetOptionValue("HostileSpawnRate")
+			if IsDamageBroken then
+				MaxChanceToBeHostileNPC = 0
+			end
 			SurvivorInfiniteAmmo = SuperSurvivorGetOptionValue("InfinitAmmo")
 			SurvivorHunger = SuperSurvivorGetOptionValue("SurvivorHunger")
 			SurvivorsFindWorkThemselves = SuperSurvivorGetOptionValue("FindWork")
@@ -353,8 +359,11 @@ function SuperSurvivorsLoadGridsquare(square)
 			
 			RaidsAtLeastEveryThisManyHours = SuperSurvivorGetOptionValue("RaidersAtLeastHours") --(60 * 24)
 			RaidsStartAfterThisManyHours = SuperSurvivorGetOptionValue("RaidersAfterHours") -- (5 * 24)
+			if IsDamageBroken then
+				RaidsStartAfterThisManyHours = 9999999
+			end
 			RaidChanceForEveryTenMinutes = SuperSurvivorGetOptionValue("RaidersChance") --(6 * 24 * 14)
-			
+
 					
 			if(doesFileExist("SurvivorLocX")) then 
 				SurvivorMap = loadSurvivorMap()  -- matrix grid containing info on location of all survivors for re-spawning purposes
