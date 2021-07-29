@@ -6,7 +6,6 @@ function AIManager(TaskMangerIn)
 	
 	if(ASuperSurvivor:needToFollow()) or (ASuperSurvivor:Get():getVehicle() ~= nil) then return TaskMangerIn end
 	
-	if(ASuperSurvivor.DebugMode) then print(ASuperSurvivor:getName().." "..ASuperSurvivor:getAIMode() .. " AIManager2") end
 	if (TaskMangerIn == nil) or (ASuperSurvivor == nil) then 
 		print("error TaskMangerIn or ASuperSurvivor was nil")
 		return false 
