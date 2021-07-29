@@ -332,11 +332,6 @@ function SuperSurvivor:getModData()
 	return self.player:getModData()
 end
 function SuperSurvivor:getName()
-	--if (self.ID == 0) then
-	--	return self.player:getDisplayName()
-	--else
-	--	return self.player:getForname()
-	--end
 	return self.player:getModData().Name
 end
 
@@ -1436,7 +1431,7 @@ function SuperSurvivor:walkTo(square)
 		if (door ~= nil) and (door:isLocked() or door:isLockedByKey()) then
 			local building = door:getOppositeSquare():getBuilding()
 			--if (builing == nil) or (not self.parent:isTargetBuildingClaimed(builing)) then
-			--	self:DebugSay("little pig, little pig")
+				self:DebugSay("little pig, little pig")
 			--	door:setIsLocked(false)
 			--	door:setLockedByKey(false)
 			--end
@@ -1626,14 +1621,12 @@ function SuperSurvivor:update()
 	end
 	
 
-	--if (self.TargetSquare ~= nil and self.TargetSquare:getZ() ~= self.player:getZ() and getGameSpeed() > 2) then
-	--	print("detected stair danger: " .. self:getName());
-	--	self.TargetSquare = nil
-	--	local xoff = self.player:getX() + ZombRand(-3,3)
-	--	local yoff = self.player:getY() + ZombRand(-3,3)		
-	--	self:StopWalk()
-	--	self:Wait(2)
-	--end
+	if (self.TargetSquare ~= nil and self.TargetSquare:getZ() ~= self.player:getZ() and getGameSpeed() > 2) then
+		print("DANGER ZONE 2: " .. self:getName());
+		self.TargetSquare = nil
+		self:StopWalk()
+		self:Wait(10)
+	end
 
 
 	local cs = self.player:getCurrentSquare()
@@ -1668,7 +1661,7 @@ function SuperSurvivor:update()
 			)
 		) or (self:getCurrentTask() == "Pursue")
 	) then
-		--print(self:getName().." Attempt Entry1")
+		print(self:getName().." Attempt Entry1")
 		self:getTaskManager():AddToTop(AttemptEntryIntoBuildingTask:new(self, self.TargetBuilding))
 		self.TicksSinceSquareChanged = 0
 	end
