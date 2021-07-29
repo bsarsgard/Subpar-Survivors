@@ -541,7 +541,7 @@ function SuperSurvivorPresetSpawn(square)
 					SuperSurvivor.player:getModData().NoParty = true;
 				end
 				
-				if( RPresetSpawns[i].isHostile == true) then SuperSurvivor:setHostile(true) end
+				if(IsDamageBroken and RPresetSpawns[i].isHostile == true) then SuperSurvivor:setHostile(true) end
 				SuperSurvivor.player:getModData().seenZombie = true;
 				
 				if(RPresetSpawns[i].Suit ~= nil) then
