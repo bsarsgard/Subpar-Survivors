@@ -94,6 +94,7 @@ function SuperSurvivorPlayerInit(player)
 					
 					
 						
+					local gun = player:getInventory():AddItem("Base.BaseballBat");
 					local gun = player:getInventory():AddItem("Base.Pistol");
 					local mag
 					for i=1, 4 do
@@ -179,7 +180,7 @@ end
 function getGunShotWoundBP(player)
 
 	if(not instanceof(player,"IsoPlayer")) then 
-		print("not a player object was given to getGunshotwoundBP")
+		--print("not a player object was given to getGunshotwoundBP")
 		return nil 
 	end
 
@@ -196,7 +197,7 @@ function getGunShotWoundBP(player)
 		end
 	end
 	if(not foundBP) then 
-		print("no body part with gunshot wound")
+		--print("no body part with gunshot wound")
 		return nil 
 	end
 	local result = ZombRand(1,#list)
@@ -223,18 +224,19 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 	local fakehit = false
 	
 	if(SSV == nil) or (SSW == nil) then return false end
+	--print(SSW:getName() .. " / " .. SSV:getName() .. " x" .. tostring(damage))
 	
 	if(victim.setAvoidDamage ~= nil) then
 		if(SSW:isInGroup(victim)) then  
 			--victim:Say("cant touch this!")
-			print("cant touch this")
+			--print("cant touch this")
 			fakehit = true
 			victim:setAvoidDamage(true)		
 		end
 	elseif(victim.setNoDamage ~= nil) then
 		if(SSW:isInGroup(victim)) then 
 			--victim:Say("cant touch this!")
-			print("cant touch this2")
+			--print("cant touch this2")
 			fakehit = true
 			victim:setNoDamage(true)
 		else
@@ -337,8 +339,6 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 		else
 			victim:getModData().hitByCharacter = true
 		end
-	end
-	if(instanceof(victim, "IsoPlayer") ) then	
 
 		if(weapon~=nil) and (not weapon:isAimedFirearm()) and (weapon:getPushBackMod() > 0.3) then
 			victim:StopAllActionQueue()
@@ -361,6 +361,21 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 				victim:getBodyDamage():Update();
 				
 				SSM:PublicExecution(SSW,SSV)
+		end
+
+		if IsNpcDamageBroken and victim.ID ~= 0 then
+			--print("hitConsequences " .. tostring(victim:getBodyDamage():getHealth()) )
+			--victim:hitConsequences(weapon, wielder, false, damage, false) 
+			local parts = {}
+			parts[0] = BodyPartType.Head
+			parts[1] = BodyPartType.Torso_Upper
+			parts[2] = BodyPartType.Hand_L
+			parts[3] = BodyPartType.Hand_R
+			parts[4] = BodyPartType.UpperLeg_L
+			parts[5] = BodyPartType.UpperLeg_R
+			victim:getBodyDamage():getBodyPart(parts[ZombRand(#parts)]):AddDamage(damage*100.0);
+			victim:getBodyDamage():Update();
+			--print("post getHealth is " .. tostring(victim:getBodyDamage():getHealth()) )
 		end
 	end
 	

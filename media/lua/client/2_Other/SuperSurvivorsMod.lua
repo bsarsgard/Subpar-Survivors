@@ -339,6 +339,7 @@ function SuperSurvivorsLoadGridsquare(square)
 
 			local gameVersion = getCore():getGameVersion()
 			IsDamageBroken = (gameVersion:getMajor() >= 41 and gameVersion:getMinor() > 50 and gameVersion:getMinor() < 53)
+			IsNpcDamageBroken = (gameVersion:getMajor() >= 41 and gameVersion:getMinor() >= 53)
 			
 			SuperSurvivorBravery = SuperSurvivorGetOptionValue("Bravery")
 			NoPreSetSpawn = SuperSurvivorGetOptionValue("NoPreSetSpawn")
