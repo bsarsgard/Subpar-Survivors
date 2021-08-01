@@ -104,12 +104,14 @@ function SuperSurvivorManager:LoadSurvivor(ID, square)
 		
 		elseif(self.SuperSurvivors[ID]:getAIMode() == "Guard") then 
 		
-			local area = self.SuperSurvivors[ID]:getGroup():getGroupArea("GuardArea")
-			if(area) then 		
-				self.SuperSurvivors[ID]:getTaskManager():AddToTop(WanderInAreaTask:new(self.SuperSurvivors[ID],area)) 					
-				self.SuperSurvivors[ID]:getTaskManager():setTaskUpdateLimit(10)					
-			else
-				self.SuperSurvivors[ID]:getTaskManager():AddToTop(GuardTask:new(self.SuperSurvivors[ID],self.SuperSurvivors[ID].player:getCurrentSquare()))
+			if self.SuperSurvivors[ID]:getGroup() ~= nil then
+				local area = self.SuperSurvivors[ID]:getGroup():getGroupArea("GuardArea")
+				if(area) then 		
+					self.SuperSurvivors[ID]:getTaskManager():AddToTop(WanderInAreaTask:new(self.SuperSurvivors[ID],area)) 					
+					self.SuperSurvivors[ID]:getTaskManager():setTaskUpdateLimit(10)					
+				else
+					self.SuperSurvivors[ID]:getTaskManager():AddToTop(GuardTask:new(self.SuperSurvivors[ID],self.SuperSurvivors[ID].player:getCurrentSquare()))
+				end
 			end
 			
 		elseif(self.SuperSurvivors[ID]:getAIMode() == "Patrol") then 

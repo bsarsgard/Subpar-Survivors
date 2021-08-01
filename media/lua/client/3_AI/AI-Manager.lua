@@ -512,7 +512,7 @@ function AIManager(TaskMangerIn)
 		end
 		
 		
-		if ((ASuperSurvivor:isStarving()) or (ASuperSurvivor:isDyingOfThirst())) and (ASuperSurvivor:getBaseBuilding() ~= nil) then  -- leave group and look for food if starving
+		if ((false) and (ASuperSurvivor:isStarving()) or (ASuperSurvivor:isDyingOfThirst())) and (ASuperSurvivor:getBaseBuilding() ~= nil) then  -- leave group and look for food if starving
 			-- random survivor in base is starving - reset so he goes back out looking for food and re base there
 			print(ASuperSurvivor:getName() .. " leaving group because starving")
 
