@@ -126,8 +126,11 @@ function FindUnlootedBuildingTask:update()
 			
 			local sq = getCell():getGridSquare(self.parent.player:getX() + xoff + ZombRand(-5,5) ,self.parent.player:getY() + yoff + ZombRand(-5,5),0)
 			
-			if(sq ~= nil) then self.parent:walkTo(sq) 
-			elseif self.parent.DebugMode then print("error getting walk sq FindNEW BUilding") end
+			if(sq ~= nil) then
+				self.parent:walkTo(sq)
+			elseif self.parent.DebugMode then
+				print("error getting walk sq FindNEW BUilding")
+			end
 			
 		else
 		

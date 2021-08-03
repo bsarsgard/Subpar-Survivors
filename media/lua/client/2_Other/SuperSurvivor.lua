@@ -1373,7 +1373,7 @@ function SuperSurvivor:isInAction()
 
 	--if(self.player:isPerformingAnAction()) then return true end
 	--print(self:getName().." " .. tostring(self.TicksSinceSquareChanged))
-	if((self.player:getModData().bWalking == true) and (self.TicksSinceSquareChanged <= 3)) then
+	if((self.player:getModData().bWalking == true) and (self.TicksSinceSquareChanged <= 10)) then
 		--print(self:getName().." returing true1")
 		return true 
 	end

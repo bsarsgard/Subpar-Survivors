@@ -1092,6 +1092,7 @@ end
 function myIsCategory(item,category)
 
 	if(category == "Water") and (isItemWater(item)) then return true
+	elseif(category == "Weapon") and (item:getCategory() == category) and (item:getMaxDamage() > 0.1) then return true
 	else return (item:getCategory() == category) end
 
 end
