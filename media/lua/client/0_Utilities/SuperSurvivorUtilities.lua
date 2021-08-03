@@ -970,7 +970,9 @@ function GetFoodScore(item)
 		--print("-notype")
 		-- save the canned food
 		if string.match(item:getDisplayName(), "Open") then Score = Score + 3
-		elseif string.match(item:getDisplayName(), "Canned") then Score = Score - 5 end
+		elseif string.match(item:getDisplayName(), "Canned") then Score = Score - 5
+		elseif (item:getDisplayName() == "Dog Food") then Score = Score - 10
+		elseif (item:getHungerChange()) == nil or (item:getHungerChange() == 0) then Score = -9999 end -- unidentified, probably canned from a mod
 
 		if(item:isCooked()) then Score = Score + 5 end
 	elseif (FoodType == "Fruits") or (FoodType == "Vegetables") then
