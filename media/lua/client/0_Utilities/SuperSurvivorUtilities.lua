@@ -170,7 +170,7 @@ SurvivorPerks = {
 "Reloading",
 "Fitness",
 "Lightfoot",
-"Melee",
+--"Melee",
 "Nimble",
 "PlantScavenging",
 "Reloading",
@@ -906,6 +906,20 @@ function FindAndReturnWeapon(thisItemContainer) -- exlude crap weapons
 		end
 	end
 	return nil
+end
+
+function FindAndReturnBestWeapon(thisItemContainer) -- exlude crap weapons
+	if(not thisItemContainer) then return nil end
+	local items = thisItemContainer:getItems()
+	local bestItem = nil
+
+	if(items ~= nil) and (items:size() > 0) then
+		for i=1, items:size()-1 do
+			local item = items:get(i)
+			if(item ~= nil) and (item:getCategory() == "Weapon") and (item:getMaxDamage() > 0.1) and (bestItem == nil or bestItem:getMaxDamage() < item:getMaxDamage()) then bestItem = item end
+		end
+	end
+	return bestItem
 end
 
 FoodsToExlude = {"Bleach", "Cigarettes", "HCCigar", "Antibiotics", "Teabag2", "Salt", "Pepper", "EggCarton"}

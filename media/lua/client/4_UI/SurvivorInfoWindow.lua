@@ -77,6 +77,9 @@ function SurvivorInfoWindow:Load(ASuperSurvivor)
 			
 			--end
 			--display_perk = display_perk .. " ("..SurvivorPerks[i]..")"
+			if display_perk == nil then
+				display_perk = tostring(SurvivorPerks[i]) .. "?"
+			end
 			
 			newText = newText .. getText("ContextMenu_SD_Level") .. " " .. tostring(level) .. " " .. display_perk .. "\n" ----getText("IGUI_perks_"..SurvivorPerks[i]) .. "\n" 
 		end						

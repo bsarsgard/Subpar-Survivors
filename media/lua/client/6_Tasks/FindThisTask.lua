@@ -36,8 +36,11 @@ end
 
 function FindThisTask:isComplete()
 	if(self.Complete) then
-		if(self.BagToPutIn:FindAndReturnCategory("Weapon") ~= nil) and (self.parent:Get():getPrimaryHandItem() == nil) then
-			self.parent:Get():setPrimaryHandItem(self.BagToPutIn:FindAndReturnCategory("Weapon"))
+		if (self.ItemType == "Weapon") then
+			local weapon = FindAndReturnBestWeapon(self.BagToPutIn)
+			if(weapon ~= nil) and (self.parent:Get():getPrimaryHandItem() == nil or self.parent:Get():getPrimaryHandItem():getMaxDamage() < weapon:getMaxDamage()) then
+				self.parent:Get():setPrimaryHandItem(weapon)
+			end
 		end
 		--if(self.parent:isHungry()) and (self.parent:hasFood()) then
 		--	self.parent:getTaskManager():AddToTop(EatFoodTask:new(self.parent,self.parent:getFood()))

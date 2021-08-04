@@ -656,15 +656,18 @@ end
 function SuperSurvivor:setRunning(toValue)
 
 	if(self.player:NPCGetRunning() ~= toValue) then
-	self.player:NPCSetRunning(toValue)
-	--self.player:setNPC(true)
-	--print("setRunning "..tostring(toValue))
-	--self.player:setPathfindRunning(toValue)
-	--self.player:setForceRun(toValue)
-	--self.player:setRunning(toValue)
-	self.player:NPCSetJustMoved(toValue)
-	--self.player:getModData().Running = toValue;
-	--self.player:getModData().bWalking = toValue;
+		self.player:NPCSetRunning(toValue)
+		--self.player:setNPC(true)
+		--print("setRunning "..tostring(toValue))
+		--self.player:setPathfindRunning(toValue)
+		--self.player:setForceRun(toValue)
+		--self.player:setRunning(toValue)
+		self.player:NPCSetJustMoved(toValue)
+		--self.player:getModData().Running = toValue;
+		--self.player:getModData().bWalking = toValue;
+	
+		--self.player:setSprinting(toValue);
+		--self.player:setForceSprint(toValue);
 	end
 	
 end
