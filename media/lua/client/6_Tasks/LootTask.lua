@@ -39,8 +39,11 @@ function LootCategoryTask:ForceFinish()
 	self.parent.TargetBuilding = nil
 	self.Complete = true
 	self.parent:resetContainerSquaresLooted()
-	if(MyFindAndReturnCategory(self.parent:getBag(), "Weapon", self.parent) ~= nil) and (self.parent:Get():getPrimaryHandItem() == nil) then
-		self.parent:Get():setPrimaryHandItem(MyFindAndReturnCategory(self.parent:getBag(), "Weapon", self.parent))
+	if (self.Category == "Weapon") then
+		local weapon = FindAndReturnBestWeapon(self.PlayerBag)
+		if(weapon ~= nil) and (self.parent:Get():getPrimaryHandItem() == nil or self.parent:Get():getPrimaryHandItem():getMaxDamage() < weapon:getMaxDamage()) then
+			self.parent:Get():setPrimaryHandItem(weapon)
+		end
 	end
 	
 end
