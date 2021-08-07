@@ -1331,13 +1331,13 @@ function SuperSurvivor:DoVision()
 						if(tempdistance < 1) and (character:getZ() == self.player:getZ()) then 
 							self.EnemiesOnMe = self.EnemiesOnMe + 1 
 						end
-						if(tempdistance < 10) then 
-							self.seenCount = self.seenCount + 1 
-						end
 						if(tempdistance < dangerRange) and (character:getZ() == self.player:getZ()) then
-							if (character:CanSee(self.player)) and (self:isInSameRoom(character) or (tempdistance <= 1)) then 
+							--if (character:CanSee(self.player)) and (self:isInSameRoom(character) or (tempdistance <= 1)) then 
 								self.dangerSeenCount = self.dangerSeenCount + 1 
-							end 
+							--end 
+						end
+						if(CanSee) then 
+							self.seenCount = self.seenCount + 1 
 						end
 						if( ( CanSee or (tempdistance < 0.5)) and (tempdistance < closestSoFar) ) then
 							closestSoFar = tempdistance ;
@@ -1345,7 +1345,7 @@ function SuperSurvivor:DoVision()
 							closestNumber = i;							
 						end
 						
-					elseif( (tempdistance < closestSurvivorSoFar) and CanSee ) then
+					elseif( tempdistance < closestSurvivorSoFar ) and false then
 						closestSurvivorSoFar = tempdistance
 						self.LastSurvivorSeen = character						
 					end
@@ -2042,12 +2042,12 @@ function SuperSurvivor:ReadyGun(weapon)
 		weapon:setJammed(false)
 	end	
 	
-	--print("readygun " .. weapon:getCurrentAmmoCount() .. " " .. weapon:getMaxAmmo() .. " " .. self.EnemiesOnMe .. " " .. self.seenCount)
+	self:DebugSay("readygun " .. weapon:getCurrentAmmoCount() .. " " .. weapon:getMaxAmmo() .. " " .. self.EnemiesOnMe .. " " .. self.seenCount)
 	
 	if weapon:haveChamber() and not weapon:isRoundChambered() then
 		if(ISReloadWeaponAction.canRack(weapon)) then
 			ISReloadWeaponAction.OnPressRackButton(self.player, weapon)
-			--print(self:getName().." needs to rack gun")
+			self:DebugSay(self:getName().." needs to rack gun")
 			return true		
 		end	
 	end
@@ -2055,11 +2055,11 @@ function SuperSurvivor:ReadyGun(weapon)
 	if(weapon:getMagazineType()) then
 
 		if(weapon:isContainsClip() == false) then
-			--print(self:getName().." gun needs a magazine0:"..tostring(weapon:getMagazineType()))
+			self:DebugSay(self:getName().." gun needs a magazine0:"..tostring(weapon:getMagazineType()))
 			local magazine = weapon:getBestMagazine(self.player)
 			if(magazine == nil) then magazine = self.player:getInventory():getFirstTypeRecurse(weapon:getMagazineType()) end
 			if(magazine == nil) then 
-				--print(self:getName().." needs to spawn magazine1:" .. tostring(weapon:getMagazineType()))
+				self:DebugSay(self:getName().." needs to spawn magazine1:" .. tostring(weapon:getMagazineType()))
 				magazine = self.player:getInventory():AddItem(weapon:getMagazineType()); 
 			end
 			
@@ -2070,12 +2070,12 @@ function SuperSurvivor:ReadyGun(weapon)
 					magazine:setCurrentAmmoCount(magazine:getMaxAmmo())
 				end
 				
-				--print(self:getName().." trying to load magazine into gun")
+				self:DebugSay(self:getName().." trying to load magazine into gun")
 				ISTimedActionQueue.add(ISInsertMagazine:new(self.player, weapon, magazine))
 				ISReloadWeaponAction.ReloadBestMagazine(self.player, weapon)
 				return	true		
 			else
-				--print(self:getName().." error trying to spawn mag for gun?")
+				self:DebugSay(self:getName().." error trying to spawn mag for gun?")
 			end			
 		end
 		
@@ -2084,35 +2084,35 @@ function SuperSurvivor:ReadyGun(weapon)
 			local magazine = weapon:getBestMagazine(self.player)
 			if(magazine == nil) then magazine = self.player:getInventory():getFirstTypeRecurse(weapon:getMagazineType()) end
 			if(magazine == nil) then 
-				--print(self:getName().." needs to spawn magazine2:" .. tostring(weapon:getMagazineType()))
+				self:DebugSay(self:getName().." needs to spawn magazine2:" .. tostring(weapon:getMagazineType()))
 				magazine = self.player:getInventory():AddItem(weapon:getMagazineType()); 
 			end
 			if(self:gunAmmoInInvCount(weapon) < 1) and (SurvivorInfiniteAmmo) then
 				
 				local maxammo = magazine:getMaxAmmo()
 				local amtype = magazine:getAmmoType()
-				--print(self:getName().." needs to spawn "..tostring(maxammo).." x " .. tostring(amtype))
+				self:DebugSay(self:getName().." needs to spawn "..tostring(maxammo).." x " .. tostring(amtype))
 				for i=0, maxammo do
 					local am = instanceItem(amtype)
 					self.player:getInventory():AddItem(am)
 				end
 			elseif(self:gunAmmoInInvCount(weapon) < 1) and (not ISReloadWeaponAction.canShoot(weapon)) and (not SurvivorInfiniteAmmo) then
-				--(self:getName().." no clip ammo left")
+				self:DebugSay(self:getName().." no clip ammo left")
 				return false
 			end
 			
 			if (self:gunAmmoInInvCount(weapon) < 1) and (weapon:getCurrentAmmoCount() > 0) then
-				--print(self:getName().." out of bullets but mag not empty, keep firing")		
+				self:DebugSay(self:getName().." out of bullets but mag not empty, keep firing")		
 				return true
 			elseif (self.EnemiesOnMe == 0 and self.seenCount == 0 and weapon:getCurrentAmmoCount() < weapon:getMaxAmmo()) or (weapon:getCurrentAmmoCount() == 0) then
 				ISTimedActionQueue.add(ISEjectMagazine:new(self.player, weapon))
 			
 				-- reload the ejected magazine and insert it
-				--print(self:getName().." needs to reload the ejected magazine and insert it")
+				self:DebugSay(self:getName().." needs to reload the ejected magazine and insert it")
 				ISTimedActionQueue.queueActions(self.player, ISReloadWeaponAction.ReloadBestMagazine, weapon)
 				return true
 			else 
-				--print(self:getName().." mag already full (enough)")				
+				self:DebugSay(self:getName().." mag already full (enough)")				
 				return true
 			end
 		end
@@ -2131,7 +2131,7 @@ function SuperSurvivor:ReadyGun(weapon)
 			
 			local maxammo = weapon:getMaxAmmo()
 			local ammotype = weapon:getAmmoType()
-			--print(self:getName().." needs to spawn ammo type:" .. tostring(ammotype))
+			self:DebugSay(self:getName().." needs to spawn ammo type:" .. tostring(ammotype))
 			for i=0, maxammo do			
 				local am = instanceItem(ammotype)
 				self.player:getInventory():AddItem(am)
@@ -2140,25 +2140,31 @@ function SuperSurvivor:ReadyGun(weapon)
 		
 		-- if can't have more bullets, we don't do anything, this doesn't apply for magazine-type guns (you'll still remove the current clip)
 		if weapon:getCurrentAmmoCount() >= weapon:getMaxAmmo() then
-			--print(self:getName().." ammo already max")
+			self:DebugSay(self:getName().." ammo already max")
 			return true
 		end
 
 		-- if there's bullets in the gun and we're in danger, just keep shooting
-		if (self.EnemiesOnMe > 0 or self.seenCount > 0) and (weapon:getCurrentAmmoCount() > 0) then
+		if (weapon:getCurrentAmmoCount() > 0 and self.EnemiesOnMe > 0) then
+			self:DebugSay("just keep shooting")
+			return true
+		elseif (weapon:getCurrentAmmoCount() > 0 and self.seenCount > 0 and not self:isReloading()) then
+			self:DebugSay("empty the gun")
 			return true
 		end
 		
 		local ammoCount = ISInventoryPaneContextMenu.transferBullets(self.player, weapon:getAmmoType(), weapon:getCurrentAmmoCount(), weapon:getMaxAmmo())
 		if ammoCount == 0 then
-			--print(self:getName().." no ammo")
+			self:DebugSay(self:getName().." no ammo")
 			if(not ISReloadWeaponAction.canShoot(weapon)) then
 				return false 
 			else
 				return true
 			end
+		elseif (self.seenCount == 0 and weapon:getCurrentAmmoCount() < weapon:getMaxAmmo()) or (weapon:getCurrentAmmoCount() == 0) and (not self:isReloading()) then
+			self:DebugSay("reload")
+			ISTimedActionQueue.add(ISReloadWeaponAction:new(self.player, weapon))
 		end
-		ISTimedActionQueue.add(ISReloadWeaponAction:new(self.player, weapon))
 		return true
 	end
 	
