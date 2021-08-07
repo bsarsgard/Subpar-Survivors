@@ -135,7 +135,20 @@ function AIManager(TaskMangerIn)
 		end		
 	end
 	
-	if((ASuperSurvivor:Get():getModData().InitGreeting ~= nil) or (ASuperSurvivor:getAIMode() == "Random Solo")) and (TaskMangerIn:getCurrentTask() ~= "Listen") and (TaskMangerIn:getCurrentTask() ~= "Surender") and (TaskMangerIn:getCurrentTask() ~= "Flee From Spot") and (TaskMangerIn:getCurrentTask() ~= "Take Gift") and (ASuperSurvivor.LastSurvivorSeen ~= nil) and (ASuperSurvivor.LastSurvivorSeen:isGhostMode() == false) and (ASuperSurvivor:getSpokeTo(ASuperSurvivor.LastSurvivorSeen:getModData().ID) == false) and (getDistanceBetween(ASuperSurvivor.LastSurvivorSeen,ASuperSurvivor:Get()) < 8) and (ASuperSurvivor:getDangerSeenCount()==0) and (TaskMangerIn:getCurrentTask() ~= "First Aide") and (ASuperSurvivor:Get():CanSee(ASuperSurvivor.LastSurvivorSeen)) then
+	if(
+		(ASuperSurvivor:Get():getModData().InitGreeting ~= nil)
+		or (ASuperSurvivor:getAIMode() == "Random Solo")
+	)
+	and (TaskMangerIn:getCurrentTask() ~= "Listen")
+	and (TaskMangerIn:getCurrentTask() ~= "Surender")
+	and (TaskMangerIn:getCurrentTask() ~= "Flee From Spot")
+	and (TaskMangerIn:getCurrentTask() ~= "Take Gift")
+	and (ASuperSurvivor.LastSurvivorSeen ~= nil)
+	--and (ASuperSurvivor.LastSurvivorSeen:isGhostMode() == false)
+	and (ASuperSurvivor:getSpokeTo(ASuperSurvivor.LastSurvivorSeen:getModData().ID) == false)
+	and (getDistanceBetween(ASuperSurvivor.LastSurvivorSeen,ASuperSurvivor:Get()) < 8)
+	and (ASuperSurvivor:getDangerSeenCount()==0) and (TaskMangerIn:getCurrentTask() ~= "First Aide")
+	and (ASuperSurvivor:Get():CanSee(ASuperSurvivor.LastSurvivorSeen)) then
 			ASuperSurvivor:Speak(getText("ContextMenu_SD_HeyYou"))
 			ASuperSurvivor:SpokeTo(ASuperSurvivor.LastSurvivorSeen:getModData().ID)
 			--print(ASuperSurvivor:getName() .. " adding listen task")
@@ -471,14 +484,14 @@ function AIManager(TaskMangerIn)
 		if(ASuperSurvivor.TargetBuilding ~= nil) or (ASuperSurvivor:inUnLootedBuilding()) then
 			if ASuperSurvivor.TargetBuilding == nil then ASuperSurvivor.TargetBuilding = ASuperSurvivor:getBuilding() end
 			if (not ASuperSurvivor:hasWeapon()) and (TaskMangerIn:getCurrentTask() ~= "Loot Category") and (ASuperSurvivor:getDangerSeenCount() <= 0) and (ASuperSurvivor:inUnLootedBuilding()) then
-				TaskMangerIn:AddToTop(LootCategoryTask:new(ASuperSurvivor,ASuperSurvivor.TargetBuilding,"Food",0))
+				TaskMangerIn:AddToTop(LootCategoryTask:new(ASuperSurvivor,ASuperSurvivor.TargetBuilding,"Food",2))
 				TaskMangerIn:AddToTop(EquipWeaponTask:new(ASuperSurvivor))
 				TaskMangerIn:AddToTop(LootCategoryTask:new(ASuperSurvivor,ASuperSurvivor.TargetBuilding,"Weapon",2))
 			elseif (ASuperSurvivor:hasRoomInBag()) and (TaskMangerIn:getCurrentTask() ~= "Loot Category") and (ASuperSurvivor:getDangerSeenCount() <= 0) and (ASuperSurvivor:inUnLootedBuilding()) then
-				TaskMangerIn:AddToTop(LootCategoryTask:new(ASuperSurvivor,ASuperSurvivor.TargetBuilding,"Food",0))
+				TaskMangerIn:AddToTop(LootCategoryTask:new(ASuperSurvivor,ASuperSurvivor.TargetBuilding,"Food",1))
 			end
 		end
-		if (ASuperSurvivor:getBaseBuilding() == nil) and (ASuperSurvivor:getBuilding()) and (TaskMangerIn:getCurrentTask() ~= "First Aide") and (TaskMangerIn:getCurrentTask() ~= "Attack") and (TaskMangerIn:getCurrentTask() ~= "Barricade Building") and (ASuperSurvivor:hasWeapon())  and (ASuperSurvivor:hasFood()) then
+		if (SurvivorBases) and (ASuperSurvivor:getBaseBuilding() == nil) and (ASuperSurvivor:getBuilding()) and (TaskMangerIn:getCurrentTask() ~= "First Aide") and (TaskMangerIn:getCurrentTask() ~= "Attack") and (TaskMangerIn:getCurrentTask() ~= "Barricade Building") and (ASuperSurvivor:hasWeapon())  and (ASuperSurvivor:hasFood()) then
 			TaskMangerIn:clear()
 			ASuperSurvivor:setBaseBuilding(ASuperSurvivor:getBuilding())
 			TaskMangerIn:AddToTop(WanderInBuildingTask:new(ASuperSurvivor,ASuperSurvivor:getBuilding()))
@@ -512,7 +525,7 @@ function AIManager(TaskMangerIn)
 		end
 		
 		
-		if ((false) and (ASuperSurvivor:isStarving()) or (ASuperSurvivor:isDyingOfThirst())) and (ASuperSurvivor:getBaseBuilding() ~= nil) then  -- leave group and look for food if starving
+		if ((SurvivorBases) and (ASuperSurvivor:isStarving()) or (ASuperSurvivor:isDyingOfThirst())) and (ASuperSurvivor:getBaseBuilding() ~= nil) then  -- leave group and look for food if starving
 			-- random survivor in base is starving - reset so he goes back out looking for food and re base there
 			print(ASuperSurvivor:getName() .. " leaving group because starving")
 

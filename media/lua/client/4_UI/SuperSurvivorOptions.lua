@@ -29,6 +29,7 @@ function SuperSurvivorGetOptionValue(option)
 	elseif(option == "InfinitAmmo") then return (num ~= 1)
 	elseif(option == "NoPreSetSpawn") then return (num ~= 1)
 	elseif(option == "SafeBase") then return (num ~= 1)
+	elseif(option == "SurvivorBases") then return (num ~= 1)
 	elseif(option == "DebugOptions") then return (num ~= 1)
 	elseif(option == "FindWork") then return (num == 1)
 	elseif(option == "SurvivorHunger") then return (num == 1)
@@ -115,6 +116,7 @@ if(not SuperSurvivorOptions["MaxHostileSpawnRate"]) then SuperSurvivorOptions["M
 if(not SuperSurvivorOptions["InfinitAmmo"]) then SuperSurvivorOptions["InfinitAmmo"] = 1 end
 if(not SuperSurvivorOptions["NoPreSetSpawn"]) then SuperSurvivorOptions["NoPreSetSpawn"] = 2 end
 if(not SuperSurvivorOptions["SafeBase"]) then SuperSurvivorOptions["SafeBase"] = 2 end
+if(not SuperSurvivorOptions["SurvivorBases"]) then SuperSurvivorOptions["SurvivorBases"] = 2 end
 if(not SuperSurvivorOptions["FindWork"]) then SuperSurvivorOptions["FindWork"] = 1 end
 if(not SuperSurvivorOptions["SurvivorHunger"]) then SuperSurvivorOptions["SurvivorHunger"] = 1 end
 if(not SuperSurvivorOptions["SurvivorFriendliness"]) then SuperSurvivorOptions["SurvivorFriendliness"] = 4 end
@@ -804,6 +806,34 @@ if index then
 			local box = self.control
 			if box.options[box.selected] then
 				SuperSurvivorSetOption("SafeBase",box.selected)
+				print("setting survivor option")
+			else
+				print("error could not set survivor option")
+			end
+		end
+		function gameOption:onChange(box)
+			print("option changed to ".. tostring(box.selected))
+		end
+		self.gameOptions:add(gameOption)
+		
+		
+		y = y + spacing
+		
+		
+		
+		local options = {getText("ContextMenu_SD_Off"),getText("ContextMenu_SD_On")}
+		local SurvivorBasesOptionsCombo = self:addCombo(splitpoint, y, comboWidth, 20,"Survivor Bases", options, 1)
+		SurvivorBasesOptionsCombo:setToolTipMap({defaultTooltip = "Wild Survivors will set up their own bases"});
+		
+		gameOption = GameOption:new('SurvivorBases', SurvivorBasesOptionsCombo)
+		function gameOption.toUI(self)
+			local box = self.control
+			box.selected = SuperSurvivorGetOption("SurvivorBases")
+		end
+		function gameOption.apply(self)
+			local box = self.control
+			if box.options[box.selected] then
+				SuperSurvivorSetOption("SurvivorBases",box.selected)
 				print("setting survivor option")
 			else
 				print("error could not set survivor option")
