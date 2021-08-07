@@ -902,7 +902,10 @@ function FindAndReturnWeapon(thisItemContainer) -- exlude crap weapons
 	if(items ~= nil) and (items:size() > 0) then
 		for i=1, items:size()-1 do
 			local item = items:get(i)
-			if(item ~= nil) and (item:getCategory() == "Weapon") and (item:getMaxDamage() > 0.1) then return item end
+			if(item ~= nil) and (item:getCategory() == "Weapon") and (item:getMaxDamage() > 0.1) then
+				print("FindAndReturnWeapon " .. item:getDisplayName() .. " - " .. tostring(item:getMaxDamage()))
+				return item
+			end
 		end
 	end
 	return nil
@@ -918,6 +921,9 @@ function FindAndReturnBestWeapon(thisItemContainer) -- exlude crap weapons
 			local item = items:get(i)
 			if(item ~= nil) and (item:getCategory() == "Weapon") and (item:getMaxDamage() > 0.1) and (bestItem == nil or bestItem:getMaxDamage() < item:getMaxDamage()) then bestItem = item end
 		end
+	end
+	if (bestItem ~= nil) then
+		print("FindAndReturnBestWeapon " .. item:getDisplayName() .. " - " .. tostring(item:getMaxDamage()))
 	end
 	return bestItem
 end
