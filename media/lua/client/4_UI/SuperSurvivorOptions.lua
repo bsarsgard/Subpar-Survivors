@@ -41,7 +41,7 @@ function SuperSurvivorGetOptionValue(option)
 	elseif(option == "RaidersAtLeastHours") then return ((num * 5) * 24)
 	
 	elseif(option == "RaidersAfterHours") and (num == 2) then return 24
-	elseif(option == "RaidersAfterHours") and (num == 22) then return 9999999
+	elseif(option == "RaidersAfterHours") and (num >= 22) then return 9999999
 	elseif(option == "RaidersAfterHours") then return (((num-2) * 5) * 24)
 	
 	elseif(option == "RaidersChance") then return ((num + 2) * 24 * 14)  -- (6 * 24 * 14)
@@ -123,6 +123,7 @@ if(not SuperSurvivorOptions["SurvivorFriendliness"]) then SuperSurvivorOptions["
 
 if(not SuperSurvivorOptions["RaidersAtLeastHours"]) then SuperSurvivorOptions["RaidersAtLeastHours"] = 13 end
 if(not SuperSurvivorOptions["RaidersAfterHours"]) then SuperSurvivorOptions["RaidersAfterHours"] = 7 end
+if(SuperSurvivorOptions["RaidersAfterHours"] > 22) then SuperSurvivorOptions["RaidersAfterHours"] = 22 end -- fix legacy bad value
 if(not SuperSurvivorOptions["RaidersChance"]) then SuperSurvivorOptions["RaidersChance"] = 3 end
 if(not SuperSurvivorOptions["Bravery"]) then SuperSurvivorOptions["Bravery"] = 2 end
 if(not SuperSurvivorOptions["SSHotkey1"]) then SuperSurvivorOptions["SSHotkey1"] = 6 end
@@ -428,7 +429,29 @@ if index then
 		
 		
 		
-		local options = {getText("ContextMenu_SD_StartImmediately"),getText("ContextMenu_SD_AfterDay1"), getText("ContextMenu_SD_AfterDay5"), getText("ContextMenu_SD_AfterDay10"), getText("ContextMenu_SD_AfterDay15"), getText("ContextMenu_SD_AfterDay20"), getText("ContextMenu_SD_AfterDay25"), getText("ContextMenu_SD_AfterDay30"), getText("ContextMenu_SD_AfterDay35"), getText("ContextMenu_SD_AfterDay40"), getText("ContextMenu_SD_AfterDay45"), getText("ContextMenu_SD_AfterDay50"), getText("ContextMenu_SD_AfterDay55"), getText("ContextMenu_SD_AfterDay60"), getText("ContextMenu_SD_AfterDay65"), getText("ContextMenu_SD_AfterDay70"), getText("ContextMenu_SD_AfterDay75"), getText("ContextMenu_SD_AfterDay80"), getText("ContextMenu_SD_AfterDay85"), getText("ContextMenu_SD_AfterDay90"), getText("ContextMenu_SD_AfterDay95"), getText("ContextMenu_SD_AfterDay100"),getText("ContextMenu_SD_Never")}
+		local options = {
+			getText("ContextMenu_SD_StartImmediately"),
+			getText("ContextMenu_SD_AfterDay1"), 
+			getText("ContextMenu_SD_AfterDay5"), 
+			getText("ContextMenu_SD_AfterDay10"), 
+			getText("ContextMenu_SD_AfterDay15"), 
+			getText("ContextMenu_SD_AfterDay20"), 
+			getText("ContextMenu_SD_AfterDay25"), 
+			getText("ContextMenu_SD_AfterDay30"), 
+			getText("ContextMenu_SD_AfterDay35"), 
+			getText("ContextMenu_SD_AfterDay40"), 
+			getText("ContextMenu_SD_AfterDay45"), 
+			getText("ContextMenu_SD_AfterDay50"), 
+			getText("ContextMenu_SD_AfterDay55"), 
+			getText("ContextMenu_SD_AfterDay60"),
+			getText("ContextMenu_SD_AfterDay65"), 
+			getText("ContextMenu_SD_AfterDay70"), 
+			getText("ContextMenu_SD_AfterDay75"), 
+			getText("ContextMenu_SD_AfterDay80"), 
+			getText("ContextMenu_SD_AfterDay85"), 
+			getText("ContextMenu_SD_AfterDay90"), 
+			getText("ContextMenu_SD_AfterDay95"),
+			getText("ContextMenu_SD_Never")}
 	
 		local gunspawnrateCombo = self:addCombo(splitpoint, y, comboWidth, 20,getText("ContextMenu_SOption_RaidersAfterHours"), options, 1)
 		gunspawnrateCombo:setToolTipMap({defaultTooltip = getText("ContextMenu_SOption_RaidersAfterHoursDesc")});
