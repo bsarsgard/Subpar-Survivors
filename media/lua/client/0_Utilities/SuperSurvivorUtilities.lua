@@ -923,7 +923,7 @@ function FindAndReturnBestWeapon(thisItemContainer) -- exlude crap weapons
 		end
 	end
 	if (bestItem ~= nil) then
-		print("FindAndReturnBestWeapon " .. item:getDisplayName() .. " - " .. tostring(item:getMaxDamage()))
+		print("FindAndReturnBestWeapon " .. tostring(bestItem:getDisplayName()) .. " - " .. tostring(bestItem:getMaxDamage()))
 	end
 	return bestItem
 end
