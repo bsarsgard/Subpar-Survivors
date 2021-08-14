@@ -517,8 +517,10 @@ function AIManager(TaskMangerIn)
 					OwnerGroup:addMember(ASuperSurvivor,"Worker")
 					ASuperSurvivor:Speak("Please let me stay here")
 					local LeaderObj = SSM:Get(LeaderID)
-					if(LeaderObj) then LeaderObj:Speak("Welcome to our Group") end
-					print("Accepted by " .. LeaderObj:getName())
+					if(LeaderObj) then
+						LeaderObj:Speak("Welcome to our Group")
+						print("Accepted by " .. LeaderObj:getName())
+					end
 				end
 			end
 			
