@@ -363,7 +363,7 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 				SSM:PublicExecution(SSW,SSV)
 		end
 
-		if IsNpcDamageBroken and victim.ID ~= 0 then
+		if IsNpcDamageBroken and SSV:getID() ~= 0 then
 			--print("hitConsequences " .. tostring(victim:getBodyDamage():getHealth()) )
 			--victim:hitConsequences(weapon, wielder, false, damage, false) 
 			local parts = {}
@@ -375,7 +375,7 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 			parts[5] = BodyPartType.UpperLeg_R
 			victim:getBodyDamage():getBodyPart(parts[ZombRand(#parts)]):AddDamage(damage*100.0);
 			victim:getBodyDamage():Update();
-			--print("post getHealth is " .. tostring(victim:getBodyDamage():getHealth()) )
+			--print("post post getHealth is " .. tostring(victim:getBodyDamage():getHealth()) )
 		end
 	end
 	
