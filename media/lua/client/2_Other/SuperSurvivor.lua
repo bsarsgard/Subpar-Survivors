@@ -1571,7 +1571,158 @@ function SuperSurvivor:updateTime()
 	else return false end
 end
 
+function SuperSurvivor:NPCcalcFractureInjurySpeed(bodypart)
+	local b = 0.4;
+	if (bodypart:getFractureTime() > 10.0) then
+		b = 0.7;
+	end
+	if (bodypart:getFractureTime() > 20.0) then
+		b = 1.0;
+	end
+	if (bodypart:getSplintFactor() > 0.0) then
+		b = b - 0.2 - math.min(bodypart:getSplintFactor() / 10.0, 0.8);
+	end
+	return math.max(0.0, b);
+end
 
+function SuperSurvivor:NPCcalculateInjurySpeed(bodypart,b)
+	local scratchSpeedModifier = bodypart:getScratchSpeedModifier();
+	local cutSpeedModifier = bodypart:getCutSpeedModifier();
+	local burnSpeedModifier = bodypart:getBurnSpeedModifier();
+	local deepWoundSpeedModifier = bodypart:getDeepWoundSpeedModifier();
+	local n = 0.0;
+	if ((bodypart:getType() == "Foot_L" or bodypart:getType() == "Foot_R") and (bodypart:getBurnTime() > 5.0 or bodypart:getBiteTime() > 0.0 or bodypart:deepWounded() or bodypart:isSplint() or bodypart:getFractureTime() > 0.0 or bodypart:haveGlass())) then
+		n = 1.0f
+		if (bodypart:bandaged()) then
+			n = 0.7;
+		end
+		if (bodypart:getFractureTime() > 0.0) then
+			n = self:NPCcalcFractureInjurySpeed(bodypart);
+		end
+	end
+	if (bodypart:haveBullet()) then
+		return 1.0;
+	end
+	if (bodypart:getScratchTime() > 2.0 or bodypart:getCutTime() > 5.0 or bodypart:getBurnTime() > 0.0 or bodypart:getDeepWoundTime() > 0.0 or bodypart:isSplint() or bodypart:getFractureTime() > 0.0 or bodypart:getBiteTime() > 0.0) then
+		n = n + (bodypart:getScratchTime() / scratchSpeedModifier + bodypart:getCutTime() / cutSpeedModifier + bodypart:getBurnTime() / burnSpeedModifier + bodypart:getDeepWoundTime() / deepWoundSpeedModifier) + bodypart:getBiteTime() / 20.0;
+		if (bodypart:bandaged()) then
+			n = n / 2.0;
+		end
+		if (bodypart:getFractureTime() > 0.0) then
+			n = self:NPCcalcFractureInjurySpeed(bodypart);
+		end
+	end
+	if (b and bodypart:getPain() > 20.0) then
+		n = n + bodypart:getPain() / 10.0;
+	end
+	return n;
+end
+
+function SuperSurvivor:NPCgetFootInjurySpeedModifier()
+	local b = true;
+	local n = 0.0;
+	local n2 = 0.0;
+	for i = BodyPartType.UpperLeg_L:index(), (BodyPartType.MAX:index() - 1) do
+		local bodydamage = self.player:getBodyDamage()
+		local bodypart = bodydamage:getBodyPart(BodyPartType.FromIndex(i));
+		local calculateInjurySpeed = self:NPCcalculateInjurySpeed(bodypart, false);
+		if (b) then
+			n = n + calculateInjurySpeed;
+			b = false
+		else
+			n2 = n2 + calculateInjurySpeed;
+			b = true
+		end
+	end
+	if (n > n2) then
+		return -(n + n2);
+	else
+		return n + n2;
+	end
+end
+
+function SuperSurvivor:NPCgetrunSpeedModifier() 
+	local NPCrunSpeedModifier = 1.0;
+	local items = self.player:getWornItems()
+	for i=0, items:size()-1 do
+		local item = items:getItemByIndex(i)
+		if item ~= nil and (item:getCategory() == "Clothing") then
+			NPCrunSpeedModifier = NPCrunSpeedModifier + (item:getRunSpeedModifier() - 1.0);
+		end
+	end	
+	local shoeitem = items:getItem("Shoes");
+	if not (shoeitem) or (shoeitem:getCondition() == 0) then
+		NPCrunSpeedModifier = NPCrunSpeedModifier * 0.85;
+	end
+	return NPCrunSpeedModifier
+end
+
+function SuperSurvivor:NPCgetwalkSpeedModifier() 
+	local NPCwalkSpeedModifier = 1.0;
+	local items = self.player:getWornItems()
+	local shoeitem = items:getItem("Shoes");
+	if not (shoeitem) or (shoeitem:getCondition() == 0) then
+		NPCwalkSpeedModifier = NPCwalkSpeedModifier * 0.85;
+	end
+	return NPCwalkSpeedModifier
+end
+
+function SuperSurvivor:NPCcalcRunSpeedModByBag(bag)
+	return (bag:getScriptItem().runSpeedModifier - 1.0) * (1.0 + bag:getContentsWeight() / bag:getEffectiveCapacity(self.player) / 2.0);
+end
+
+function SuperSurvivor:NPCgetfullSpeedMod() 
+	local NPCfullSpeedMod
+	local NPCbagRunSpeedModifier = 0
+	if (self.player:getClothingItem_Back() ~= nil) and (instanceof(self.player:getClothingItem_Back(),"InventoryContainer")) then
+		NPCbagRunSpeedModifier = NPCbagRunSpeedModifier + self:NPCcalcRunSpeedModByBag(self.player:getClothingItem_Back():getItemContainer())
+	end
+	if (self.player:getSecondaryHandItem() ~= nil) and (instanceof(self.player:getSecondaryHandItem(),"InventoryContainer")) then
+		NPCbagRunSpeedModifier = NPCbagRunSpeedModifier + self:NPCcalcRunSpeedModByBag(self.player:getSecondaryHandItem():getItemContainer());
+	end
+	if (self.player:getPrimaryHandItem() ~= nil) and (instanceof(self.player:getPrimaryHandItem(),"InventoryContainer")) then
+		NPCbagRunSpeedModifier = NPCbagRunSpeedModifier + self:NPCcalcRunSpeedModByBag(self.player:getPrimaryHandItem():getItemContainer());
+	end
+	NPCfullSpeedMod = self:NPCgetrunSpeedModifier() + (NPCbagRunSpeedModifier - 1.0);
+	return NPCfullSpeedMod
+end
+
+function SuperSurvivor:NPCcalculateWalkSpeed()
+	local NPCfootInjurySpeedModifier = self:NPCgetFootInjurySpeedModifier();
+	self.player:setVariable("WalkInjury", NPCfootInjurySpeedModifier);
+	local NPCcalculateBaseSpeed = self.player:calculateBaseSpeed();
+	local wmax;
+	if self:getRunning() == true then
+		wmax = ((NPCcalculateBaseSpeed - 0.15) * self:NPCgetfullSpeedMod() + self.player:getPerkLevel(Perks.FromString("Sprinting")) / 20.0 - AbsoluteValue(NPCfootInjurySpeedModifier / 1.5));
+	else
+		wmax = NPCcalculateBaseSpeed * self:NPCgetwalkSpeedModifier();
+	end
+	if (self.player:getSlowFactor() > 0.0) then
+		wmax = wmax * 0.05;
+	end
+	local wmin = math.min(1.0, wmax);
+	local bodydamage = self.player:getBodyDamage()
+	if (bodydamage) then 
+		local thermo = bodydamage:getThermoregulator()
+	end
+	if (thermo) then
+		wmin = wmin * thermo:getMovementModifier();
+	end
+	--local gametime = getGameTime()
+	if (self.player:isAiming()) then
+		self.player:setVariable("StrafeSpeed", math.max(math.min(0.9 + self.player:getPerkLevel(Perks.FromString("Nimble")) / 10.0, 1.5) * math.min(wmin * 2.5, 1.0), 0.6) * 0.8);
+	end
+	if (self.player:isInTreesNoBush()) then
+		local cs = self.player:getCurrentSquare()
+		if (cs) and cs:HasTree() then
+			local tree = cs:getTree();
+		end
+		if tree then
+			wmin = wmin * tree:getSlowFactor(self.player);
+		end
+	end
+	self.player:setVariable("WalkSpeed", wmin * 0.8);
+end
 
 function SuperSurvivor:update()
 	
@@ -1692,6 +1843,7 @@ function SuperSurvivor:update()
 		end
 	end
 		
+	self:NPCcalculateWalkSpeed()
 	
 	self:DoVision()
 	--self:Speak(tostring(self:isInBase()))
