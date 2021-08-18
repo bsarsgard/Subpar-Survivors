@@ -278,7 +278,7 @@ function AIManager(TaskMangerIn)
 						local jobScores = {}
 						local job = "Relax"
 						-- idle tasks
-						jobScores["Relax"] = 0 + math.floor(ASuperSurvivor:Get():getStats():getBoredom() * 10.0)
+						jobScores["Relax"] = 0 + math.floor(ASuperSurvivor:Get():getStats():getBoredom() * 20.0)
 						jobScores["Wash Self"] = 0
 
 						-- maintenance
@@ -292,7 +292,7 @@ function AIManager(TaskMangerIn)
 
 						-- deprioritize assigned tasks
 						jobScores["Farming"] = 0 + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("Farming")), 3)
-						jobScores["Doctor"] = 0 + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("First Aid")), 3)
+						jobScores["Doctor"] = -1 + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("First Aid")), 3)
 						jobScores["Guard"] = 2 + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("Aiming")), 3)
 
 						-- jobs requiring zoned areas
@@ -363,9 +363,7 @@ function AIManager(TaskMangerIn)
 							if value >= jobScores[job] then job = key end
 						end
 
-						--local randresult = ZombRand(6) + 1
-						ASuperSurvivor:Get():getStats():setBoredom(ASuperSurvivor:Get():getStats():getBoredom() + 0.1)
-						--print("job result is:"..tostring(job))
+						ASuperSurvivor:Get():getStats():setBoredom(ASuperSurvivor:Get():getStats():getBoredom() + (ZombRand(5) / 100.0))
 						if(job == "Relax") then
 							ASuperSurvivor:Speak(getText("ContextMenu_SD_IGoRelax"))
 							ASuperSurvivor:Get():getStats():setBoredom(0.0)
