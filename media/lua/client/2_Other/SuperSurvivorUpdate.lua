@@ -363,20 +363,94 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 				SSM:PublicExecution(SSW,SSV)
 		end
 
-		if IsNpcDamageBroken and SSV:getID() ~= 0 then
-			--print("hitConsequences " .. tostring(victim:getBodyDamage():getHealth()) )
-			--victim:hitConsequences(weapon, wielder, false, damage, false) 
-			local parts = {}
-			parts[0] = BodyPartType.Head
-			parts[1] = BodyPartType.Torso_Upper
-			parts[2] = BodyPartType.Hand_L
-			parts[3] = BodyPartType.Hand_R
-			parts[4] = BodyPartType.UpperLeg_L
-			parts[5] = BodyPartType.UpperLeg_R
-			victim:getBodyDamage():getBodyPart(parts[ZombRand(#parts)]):AddDamage(damage*100.0);
-			victim:getBodyDamage():Update();
-			--print("post post getHealth is " .. tostring(victim:getBodyDamage():getHealth()) )
-		end
+		--if IsNpcDamageBroken and SSV:getID() ~= 0 then
+		--	--print("hitConsequences " .. tostring(victim:getBodyDamage():getHealth()) )
+		--	--victim:hitConsequences(weapon, wielder, false, damage, false) 
+		--	local parts = {}
+		--	parts[0] = BodyPartType.Head
+		--	parts[1] = BodyPartType.Torso_Upper
+		--	parts[2] = BodyPartType.Hand_L
+		--	parts[3] = BodyPartType.Hand_R
+		--	parts[4] = BodyPartType.UpperLeg_L
+		--	parts[5] = BodyPartType.UpperLeg_R
+		--	victim:getBodyDamage():getBodyPart(parts[ZombRand(#parts)]):AddDamage(damage*100.0);
+		--	victim:getBodyDamage():Update();
+		--	--print("post post getHealth is " .. tostring(victim:getBodyDamage():getHealth()) )
+		--end
+		if IsNpcDamageBroken and instanceof(victim, "IsoPlayer") and instanceof(wielder, "IsoPlayer") and not (victim:isLocalPlayer()) then
+			local b = true;
+			local bindex = ZombRand(BodyPartType.Hand_L:index(),BodyPartType.MAX:index());
+			local b2 = false;
+			local b3 = false;
+			local b4 = false;
+			local n;
+			if (weapon:getCategories():contains("Blunt") or weapon:getCategories():contains("SmallBlunt")) then
+				n = 0;
+				b2 = true;
+			elseif not(weapon:isAimedFirearm()) then
+				n = 1;
+				b3 = true;
+			else 
+				b4 = true;
+				n = 2;
+			end
+			local bodydamage = victim:getBodyDamage()
+			local bodypart = bodydamage:getBodyPart(BodyPartType.FromIndex(bindex));
+			if (ZombRand(0,100) < victim:getBodyPartClothingDefense(bindex, b3, b4)) then
+				b = false;
+				victim:addHoleFromZombieAttacks(BloodBodyPartType.FromIndex(bindex));
+			end
+			if b == false then
+				return;
+			end
+			victim:addHole(BloodBodyPartType.FromIndex(bindex));
+			victim:splatBloodFloorBig(0.4);
+			victim:splatBloodFloorBig(0.4);
+			victim:splatBloodFloorBig(0.4);
+			if (b3) then
+				if (ZombRand(0,6) == 6) then
+					bodypart:generateDeepWound();
+				elseif (ZombRand(0,3) == 3) then
+					bodypart:setCut(true);
+				else
+					bodypart:setScratched(true, true);
+				end
+			elseif (b2) then
+				if (ZombRand(0,4) == 4) then
+					bodypart:setCut(true);
+				else
+					bodypart:setScratched(true, true);
+				end
+			elseif (b4) then
+				bodypart:setHaveBullet(true, 0);
+			end
+			local n2 = ZombRand(weapon:getMinDamage(), weapon:getMaxDamage()) * 15.0;
+			if (bindex == BodyPartType.Head:index()) then
+				n2 = n2 * 4.0;
+			end
+			if (bindex == BodyPartType.Neck:index()) then
+				n2 = n2 * 4.0;
+			end
+			if (bindex == BodyPartType.Torso_Upper:index()) then
+				n2 = n2 * 2.0;
+			end
+			bodydamage:AddDamage(bindex, n2);
+			local stats = victim:getStats();
+			if n == 0 then
+				stats:setPain(stats:getPain() + bodydamage:getInitialThumpPain() * BodyPartType.getPainModifyer(bindex));
+			elseif n == 1 then
+				stats:setPain(stats:getPain() + bodydamage:getInitialScratchPain() * BodyPartType.getPainModifyer(bindex));
+			elseif n == 2 then
+				stats:setPain(stats:getPain() + bodydamage:getInitialBitePain() * BodyPartType.getPainModifyer(bindex));
+			end
+			if stats:getPain() > 100 then
+				stats:setPain(100)
+			end
+
+			SSV:NPCcalculateWalkSpeed();
+		
+			
+		end	
 	end
 	
 	
