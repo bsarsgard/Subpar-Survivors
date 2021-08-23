@@ -2249,8 +2249,11 @@ function SuperSurvivor:ReadyGun(weapon)
 					self.player:getInventory():AddItem(am)
 				end
 			elseif(self:gunAmmoInInvCount(weapon) < 1) and (not ISReloadWeaponAction.canShoot(weapon)) and (not SurvivorInfiniteAmmo) then
-				self:DebugSay(self:getName().." no clip ammo left")
-				return false
+				local ammo = self:openBoxForGun()
+				if ammo == nil then
+					self:DebugSay(self:getName().." no clip ammo left")
+					return false
+				end
 			end
 			
 			if (self:gunAmmoInInvCount(weapon) < 1) and (weapon:getCurrentAmmoCount() > 0) then
@@ -2307,11 +2310,14 @@ function SuperSurvivor:ReadyGun(weapon)
 		
 		local ammoCount = ISInventoryPaneContextMenu.transferBullets(self.player, weapon:getAmmoType(), weapon:getCurrentAmmoCount(), weapon:getMaxAmmo())
 		if ammoCount == 0 then
-			self:DebugSay(self:getName().." no ammo")
-			if(not ISReloadWeaponAction.canShoot(weapon)) then
-				return false 
-			else
-				return true
+			local ammo = self:openBoxForGun()
+			if ammo == nil then
+				self:DebugSay(self:getName().." no ammo")
+				if(not ISReloadWeaponAction.canShoot(weapon)) then
+					return false 
+				else
+					return true
+				end
 			end
 		elseif (self.seenCount == 0 and weapon:getCurrentAmmoCount() < weapon:getMaxAmmo()) or (weapon:getCurrentAmmoCount() == 0) and (not self:isReloading()) then
 			self:DebugSay("reload")
@@ -2405,7 +2411,6 @@ function SuperSurvivor:giveWeapon(weaponType,equipIt )
 		if(weapon:isRequiresEquippedBothHands() or weapon:isTwoHandWeapon()) then self.player:setSecondaryHandItem(weapon)  end
 	end
 	
-	
 	local ammotypes = getAmmoBullets(weapon,true);
 	if(ammotypes) then 
 		
@@ -2417,13 +2422,21 @@ function SuperSurvivor:giveWeapon(weaponType,equipIt )
 		
 		local ammo = ammotypes[1]
 		if(ammo) then
-			local tempammoitem = self.player:getInventory():AddItem(ammo);
-			if(tempammoitem ~= nil) then
-				local groupcount = tempammoitem:getCount() ;
-				local randomammo = math.floor(ZombRand(40,100)/groupcount);
+			--local tempammoitem = self.player:getInventory():AddItem(ammo);
+			--if(tempammoitem ~= nil) then
+			--	local groupcount = tempammoitem:getCount() ;
+			--	local randomammo = math.floor(ZombRand(40,100)/groupcount);
+			--	print("giving "..tostring(randomammo).." ".. ammo.. " to s for weapon:"..weapon:getType())
+			--	for i=0, randomammo do
+			--	self.player:getInventory():AddItem(ammo);
+			--	end
+			--end
+			local ammobox = getAmmoBox(ammo)
+			if(ammobox ~= nil) then
+				local randomammo = ZombRand(4,10);
 				print("giving "..tostring(randomammo).." ".. ammo.. " to s for weapon:"..weapon:getType())
 				for i=0, randomammo do
-				self.player:getInventory():AddItem(ammo);
+					self.player:getInventory():AddItem(ammobox);
 				end
 			end
 		end
@@ -2463,8 +2476,10 @@ function SuperSurvivor:FindAndReturnCount(thisType)
 end
 
 function SuperSurvivor:WeaponReady()
+	--print("WeaponReady " .. self:getName())
 	local primary = self.player:getPrimaryHandItem()
 	if(primary ~= nil) and (self.player ~= nil) and (instanceof(primary,"HandWeapon")) and (primary:isAimedFirearm()) then
+		--print("firearm")
 	
 		primary:setCondition(primary:getConditionMax())	
 		primary:setJammed(false);
@@ -2477,6 +2492,7 @@ function SuperSurvivor:WeaponReady()
 		for i=1,#self.AmmoTypes do			
 			bulletcount = bulletcount + self:FindAndReturnCount(self.AmmoTypes[i])
 		end
+		--print("bulletcount " .. tostring(bulletcount))
 		
 		self.player:getModData().ammoCount = bulletcount
 		
@@ -2489,45 +2505,9 @@ function SuperSurvivor:WeaponReady()
 		end
 		
 		if(not ammo) then
+				--print("not ammo")
 				self.TriggerHeldDown = false
-				local index = 0
-				for i=1,#self.AmmoBoxTypes do	
-					index = i
-					ammoBox = self:FindAndReturn(self.AmmoBoxTypes[i])
-					if(ammoBox) then break end
-				end
-				
-				if(ammoBox) then 
-					
-					local ORGMEnabled = false
-					if(isModEnabled("ORGM")) then ORGMEnabled = true end
-				
-					local ammotype = self.AmmoTypes[index]
-					local inv = self.player:getInventory()
-					
-					local modl = ammoBox:getModule() .. "."
-					
-					local tempBullet = instanceItem(modl..ammotype)
-					local groupcount = tempBullet:getCount()
-					local count = 0
-					if ORGMEnabled then 
-						--print(ammoBox:getType())
-						count = ORGM.getAmmoData(ammotype).BoxCount
-					else
-						count = (getBoxCount(ammoBox:getType()) / groupcount)
-					end
-										
-					--print("box tyoe count was "..tostring(count))
-					for i=1, count do
-						--print("in loop!")
-						inv:AddItem(modl..ammotype)
-					end
-					self:Speak("**".. getText("ContextMenu_SD_Opens_Before") .. ammoBox:getDisplayName() .. getText("ContextMenu_SD_Opens_After") ..  "*")
-					ammoBox:getContainer():Remove(ammoBox)
-					ammo = self.player:getInventory():FindAndReturn(ammotype);
-				else
-					--print("could not find ammo box for "..tostring(boxType))
-				end
+				ammo = self:openBoxForGun()
 			
 		else
 			
@@ -2539,6 +2519,50 @@ function SuperSurvivor:WeaponReady()
 	end
 	
 	return true
+end
+
+
+function SuperSurvivor:openBoxForGun()
+	local index = 0
+	local ammoBox = nil
+	for i=1,#self.AmmoBoxTypes do	
+		index = i
+		ammoBox = self:FindAndReturn(self.AmmoBoxTypes[i])
+		if(ammoBox) then break end
+	end
+	
+	if(ammoBox) then 
+		--print("ammoBox")
+		
+		local ORGMEnabled = false
+		if(isModEnabled("ORGM")) then ORGMEnabled = true end
+	
+		local ammotype = self.AmmoTypes[index]
+		local inv = self.player:getInventory()
+		
+		local modl = ammoBox:getModule() .. "."
+		
+		local tempBullet = instanceItem(modl..ammotype)
+		local groupcount = tempBullet:getCount()
+		local count = 0
+		if ORGMEnabled then 
+			--print(ammoBox:getType())
+			count = ORGM.getAmmoData(ammotype).BoxCount
+		else
+			count = (getBoxCount(ammoBox:getType()) / groupcount)
+		end
+							
+		--print("box tyoe count was "..tostring(count))
+		for i=1, count do
+			--print("in loop!")
+			inv:AddItem(modl..ammotype)
+		end
+		self:Speak("**".. getText("ContextMenu_SD_Opens_Before") .. ammoBox:getDisplayName() .. getText("ContextMenu_SD_Opens_After") ..  "*")
+		ammoBox:getContainer():Remove(ammoBox)
+		return self.player:getInventory():FindAndReturn(ammotype);
+	else
+		--print("could not find ammo box for "..tostring(boxType))
+	end
 end
 
 

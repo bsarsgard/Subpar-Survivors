@@ -280,6 +280,7 @@ function AskToLeave(test,SS)
 	getSpecificPlayer(0):getModData().semiHostile = true
 	SS.player:getModData().hitByCharacter = true
 	SS:getTaskManager():clear()
+	--print("FLEEFROM3 " .. SS:GetName())
 	SS:getTaskManager():AddToTop(FleeFromHereTask:new(SS,getSpecificPlayer(0):getCurrentSquare()))
 	
 		local GroupID = SS:getGroupID()
@@ -302,6 +303,7 @@ function AskToDrop(test,SS)
 	getSpecificPlayer(0):getModData().semiHostile = true
 	--SS.player:getModData().hitByCharacter = true
 	SS:getTaskManager():clear()
+	--print("FLEEFROM4 " .. SS:GetName())
 	SS:getTaskManager():AddToTop(FleeFromHereTask:new(SS,getSpecificPlayer(0):getCurrentSquare()))
 	SS:getTaskManager():AddToTop(CleanInvTask:new(SS, SS.player:getCurrentSquare(),true))
 	

@@ -222,6 +222,7 @@ function SuperSurvivorManager:PublicExecution(SSW,SSV)
 					else
 						-- flee from the crazy murderer
 						print(self.SuperSurvivors[i]:getName() .. " fleeing from the crazy murderer")
+						--print("FLEEFROM1 " .. self.SuperSurvivors[i]:getName())
 						self.SuperSurvivors[i]:getTaskManager():AddToTop(FleeFromHereTask:new(self.SuperSurvivors[i],SSW:Get():getCurrentSquare()))
 					end
 					self.SuperSurvivors[i]:SpokeTo(SSW:Get():getModData().ID)
@@ -251,6 +252,7 @@ function SuperSurvivorManager:GunShotHandle(SSW)
 				if(self.SuperSurvivors[i].player:getModData().surender) and (distance < maxdistance) and self.SuperSurvivors[i]:Get():CanSee(SSW:Get()) and self.SuperSurvivors[i].player:CanSee(getSpecificPlayer(0)) then
 					-- flee from the crazy murderer
 					print(self.SuperSurvivors[i]:getName() .. " fleeing from the crazy murderer")
+					--print("FLEEFROM2 " .. self.SuperSurvivors[i]:GetName())
 					self.SuperSurvivors[i]:getTaskManager():AddToTop(FleeFromHereTask:new(self.SuperSurvivors[i],SSW:Get():getCurrentSquare()))
 					self.SuperSurvivors[i]:SpokeTo(SSW:Get():getModData().ID)
 				end
