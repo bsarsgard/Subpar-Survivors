@@ -45,15 +45,35 @@ function ChopWoodTask:update()
 		end
 		
 		local wep = player:getPrimaryHandItem()
+		if(wep ~= nil) and (wep:isBroken()) then
+			wep = nil
+			player:setPrimaryHandItem(nil)
+			player:setSecondaryHandItem(nil)
+		end
 		if(wep == nil) or ( (wep ~= nil) and (wep:getType() ~= "Axe") and (wep:getType() ~= "WoodAxe") and (wep:getType() ~= "AxeStone") and (wep:getType() ~= "HandAxe") ) then 
-			self.Axe = self.parent:getBag():getItemFromType("Axe");
-			if(self.Axe == nil) then self.Axe = self.parent:getBag():getItemFromType("AxeStone") end
-			if(self.Axe == nil) then self.Axe = self.parent:getBag():getItemFromType("WoodAxe") end
-			if(self.Axe == nil) then self.Axe = self.parent:getBag():getItemFromType("HandAxe") end
-			if(self.Axe == nil) then self.Axe = self.parent:Get():getInventory():getItemFromType("Axe") end
-			if(self.Axe == nil) then self.Axe = self.parent:Get():getInventory():getItemFromType("AxeStone") end
-			if(self.Axe == nil) then self.Axe = self.parent:Get():getInventory():getItemFromType("WoodAxe") end
-			if(self.Axe == nil) then self.Axe = self.parent:Get():getInventory():getItemFromType("HandAxe") end
+			self.Axe = nil
+			local inv = self.parent:Get():getInventory()
+			local bag = self.parent:getBag()
+			if(self.Axe == nil) then self.Axe = inv:getItemFromType("AxeStone") end
+			if(self.Axe == nil) then self.Axe = inv:getItemFromType("WoodAxe") end
+			if(self.Axe == nil) then self.Axe = inv:getItemFromType("Axe") end
+			if(self.Axe == nil) then self.Axe = inv:getItemFromType("HandAxe") end
+			if(self.Axe == nil) then
+				self.Axe = bag:getItemFromType("AxeStone")
+				if self.Axe ~= nil then ISTimedActionQueue.add(ISInventoryTransferAction:new(player, self.Axe, bag, inv, nil)) end
+			end
+			if(self.Axe == nil) then
+				self.Axe = bag:getItemFromType("WoodAxe")
+				if self.Axe ~= nil then ISTimedActionQueue.add(ISInventoryTransferAction:new(player, self.Axe, bag, inv, nil)) end
+			end
+			if(self.Axe == nil) then
+				self.Axe = bag:getItemFromType("Axe")
+				if self.Axe ~= nil then ISTimedActionQueue.add(ISInventoryTransferAction:new(player, self.Axe, bag, inv, nil)) end
+			end
+			if(self.Axe == nil) then
+				self.Axe = bag:getItemFromType("HandAxe")
+				if self.Axe ~= nil then ISTimedActionQueue.add(ISInventoryTransferAction:new(player, self.Axe, bag, inv, nil)) end
+			end
 			if(self.Axe ~= nil and self.Axe:isBroken()) then
 				--player:getCurrentSquare():AddWorldInventoryItem(self.Axe,(ZombRand(10)/100),(ZombRand(10)/100),0)
 				--player:getInventory():DoRemoveItem(self.Axe) 
