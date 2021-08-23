@@ -9,7 +9,7 @@ module Subpar
         DangerousUncooked	=	TRUE,
         DaysTotallyRotten	=	4,
         MinutesToBurn	=	70,
-        DisplayName	=	Meat,
+        DisplayName	=	Human Meat,
         Icon	=	Porkchop,
         DaysFresh	=	2,
         MinutesToCook	=	50,
@@ -22,6 +22,6 @@ module Subpar
         BadInMicrowave = true,
         GoodHot = true,
         BadCold = true,
-		UnhappyChange = 20,
+		UnhappyChange = 50,
     }
 }
