@@ -376,6 +376,7 @@ PresetSpawns[#PresetSpawns+1] = {Suit = "Doctor", X = 6477, Y = 5259, Z = 0, Gre
 
 
 CannedFoods = {"TinnedBeans","CannedBolognese","CannedCarrots2","CannedChili","CannedCorn","CannedCornedBeef","CannedMushroomSoup","CannedPeas","CannedPotato2","CannedSardines","TinnedSoup","CannedTomato2"}
+PerishableFoods = {"Strawberrie","Broccoli","Cabbage","Carrots","Potato","RedRadish","Tomato","Bread","PeanutButterSandwich","Pie"}
 
 --- floor item spawns for hilltop camp---
 PresetSpawns[#PresetSpawns+1] = {X = 11730, Y = 7935, Z = 0 , itemType="RandomCannedFood", count = 2, isItemSpawn = true}

@@ -1005,7 +1005,7 @@ function SuperSurvivorsRaiderManager()
 				getSpecificPlayer(0):Say(getText("ContextMenu_SD_WhatWasThatSound"));
 			end
 			local RaiderGroup = SSGM:newGroup()
-			local GroupSize = ZombRand(2,5) + math.floor(hours/(24*30))
+			local GroupSize = ZombRand(1,hisGroup:getMemberCount()) + math.floor(hours/(24*30))
 			if (GroupSize > 10) then GroupSize = 10 end
 			local oldGunSpawnChance = ChanceToSpawnWithGun 
 			ChanceToSpawnWithGun = ChanceToSpawnWithGun * 1.5
@@ -1023,10 +1023,15 @@ function SuperSurvivorsRaiderManager()
 				if(raider:hasWeapon() == false) then raider:giveWeapon(MeleWeapons[ZombRand(1,#MeleWeapons)]) end
 			
 				local food, bag
-				local count = ZombRand(3,7)
 				bag = raider:getBag()
+				local count = ZombRand(0,3)
 				for i=1, count do
 					food = "Base."..tostring(CannedFoods[ZombRand(#CannedFoods)+1])
+					bag:AddItem(food)
+				end
+				local count = ZombRand(0,3)
+				for i=1, count do
+					food = "Base."..tostring(PerishableFoods[ZombRand(#PerishableFoods)+1])
 					bag:AddItem(food)
 				end
 				
