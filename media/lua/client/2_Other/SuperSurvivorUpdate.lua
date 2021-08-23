@@ -378,6 +378,10 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 		--	--print("post post getHealth is " .. tostring(victim:getBodyDamage():getHealth()) )
 		--end
 		if IsNpcDamageBroken and instanceof(victim, "IsoPlayer") and instanceof(wielder, "IsoPlayer") and not (victim:isLocalPlayer()) then
+			if weapon:getType() == "BareHands" then
+				return
+			end
+			
 			local b = true;
 			local bindex = ZombRand(BodyPartType.Hand_L:index(),BodyPartType.MAX:index());
 			local b2 = false;
