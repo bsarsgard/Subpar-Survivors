@@ -60,5 +60,6 @@ description=nolanritchie: for the amazing foundation they laid in the Superb Sur
 description=Arsenal[26]-DontUse2SilencerMods: GunFighter mod compatibility code.
 description=Fox: For testing and brainstorming ideas.
 description=EpiKality: Brita's compatibility and item spawns.
+description=Sardas: NPC Damage and run speed fixes for 41.51+ compatibility.
 require=SuperbSurvivors
 versionMin=41.1
