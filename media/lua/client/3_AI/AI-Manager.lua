@@ -292,7 +292,7 @@ function AIManager(TaskMangerIn)
 
 						-- deprioritize assigned tasks
 						jobScores["Farming"] = 0 + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("Farming")), 3)
-						jobScores["Doctor"] = -1 + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("First Aid")), 3)
+						jobScores["Doctor"] = -2 + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("Doctor")), 3) + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("First Aid")), 3)
 						jobScores["Guard"] = 2 + math.min(ASuperSurvivor:Get():getPerkLevel(Perks.FromString("Aiming")), 3)
 
 						-- jobs requiring zoned areas
