@@ -1006,7 +1006,8 @@ function SuperSurvivorsRaiderManager()
 			end
 			local RaiderGroup = SSGM:newGroup()
 			local GroupSize = ZombRand(1,hisGroup:getMemberCount()) + math.floor(hours/(24*30))
-			if (GroupSize > 10) then GroupSize = 10 end
+			if (GroupSize > 10) then GroupSize = 10
+			elseif (GroupSize < 1) then GroupSize = 1 end
 			local oldGunSpawnChance = ChanceToSpawnWithGun 
 			ChanceToSpawnWithGun = ChanceToSpawnWithGun * 1.5
 		
