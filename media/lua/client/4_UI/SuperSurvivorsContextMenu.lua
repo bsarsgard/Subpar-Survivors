@@ -91,10 +91,11 @@ function SurvivorOrder(test,player,order,orderParam)
 		elseif(order == "Go Find Weapon") then TaskMangerIn:AddToTop(FindThisTask:new(ASuperSurvivor,"Weapon","Category",1))
 		elseif(order == "Go Find Water") then TaskMangerIn:AddToTop(FindThisTask:new(ASuperSurvivor,"Water","Category",1))
 		elseif(order == "Clean Up Inventory") then TaskMangerIn:AddToTop(CleanInvTask:new(ASuperSurvivor,getSpecificPlayer(0),false))
-		elseif(order == "Doctor") and (ASuperSurvivor:Get():getPerkLevel(Perks.FromString("Doctor")) >= 3) then 
+		elseif(order == "Doctor") and (ASuperSurvivor:Get():getPerkLevel(Perks.FromString("Doctor")) >= 1 or ASuperSurvivor:Get():getPerkLevel(Perks.FromString("First Aid")) >= 1) then 
 			TaskMangerIn:AddToTop(DoctorTask:new(ASuperSurvivor))
 			ASuperSurvivor:setGroupRole("Doctor")
-		elseif(order == "Doctor") and (ASuperSurvivor:Get():getPerkLevel(Perks.FromString("Doctor")) < 3) then ASuperSurvivor:Speak(getSpeech("IDontKnowHowDoctor"))
+		elseif(order == "Doctor") then
+			ASuperSurvivor:Speak(getSpeech("IDontKnowHowDoctor"))
 		end
 		ASuperSurvivor:Speak(getSpeech("Roger")) 
 		getSpecificPlayer(0):Say(OrderDisplayName[order]);
