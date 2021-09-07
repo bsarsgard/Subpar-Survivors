@@ -80,6 +80,13 @@ function GroupWindow:Update()
 	
 	local GID = SSM:Get(0):getGroupID()
 	local Group = SSGM:Get(GID)
+
+	if (Group == nil) then
+		print("Fixing player has no group")
+		Group = SSGM:newGroup()
+		Group:addMember(SSM:Get(0),"Leader")		
+	end
+
 	if(Group) then
 		MyGroupMembers = Group:getMembers()
 
