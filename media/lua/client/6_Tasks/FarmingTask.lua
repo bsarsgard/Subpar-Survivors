@@ -59,7 +59,6 @@ function FarmingTask:getSomeSeeds()
 	local seeds = {}
 
 	for i=1,12 do
-		print(tostring(i))
 		seeds[i] = self.parent:Get():getInventory():AddItem(typeofseed)
 	end
 	return seeds
@@ -168,7 +167,15 @@ function FarmingTask:getAPlantThatNeeds(needs)
 				local sq = getCell():getGridSquare(x,y,area[5])
 				if (sq) then
 					local plant = self:getPlant(sq)
-					if(plant) and (plant.state == "seeded") and (plant.waterNeeded > 0) and (plant.waterLvl < 100) then return plant end
+					if(plant) 
+						and (plant.state == "seeded")
+						and (plant.waterNeeded > 0)
+						and (plant.waterLvl < 100)
+						and (plant.typeOfSeed ~= "Carrots")
+						and (plant.typeOfSeed ~= "RedRadish")
+					then 
+						return plant 
+					end
 				end
 			end
 		end
@@ -200,7 +207,7 @@ function FarmingTask:getAPlantThatNeeds(needs)
 			end
 		end
 		
-	elseif needs == "Planting" then
+	elseif (needs == "Planting") and (self.parent:getGroupRole() == "Farmer") then
 	
 		for x=area[1], area[2] do
 			for y=area[3], area[4] do
@@ -312,20 +319,24 @@ function FarmingTask:update()
 				self.JustHarvested = true
 				self.parent:StopWalk()
 				print("harvest " .. plantType)
-				ISTimedActionQueue.add(ISHarvestPlantAction:new(self.parent:Get(), self.Plant, 150))
+				ISTimedActionQueue.add(ISHarvestPlantAction:new(self.parent:Get(), self.Plant, 50))
 				-- then replow
 				print("plow")		
 				self.TargetSquare = self.Plant:getSquare()
-				ISTimedActionQueue.add(ISPlowAction:new (self.parent:Get(), self.TargetSquare, self:getShovel(), 150))
+				ISTimedActionQueue.add(ISPlowAction:new (self.parent:Get(), self.TargetSquare, self:getShovel(), 50))
 				-- TODO: then replant same plant
 				print("plant")
 				local typeOfSeed = "PotatoSeed"
 				if plantType == "Broccoli" then typeOfSeed = "BroccoliSeed"
 				elseif plantType == "Tomato" then typeOfSeed = "TomatoSeed"
 				elseif plantType == "Potatoes" then typeOfSeed = "PotatoSeed"
+				elseif plantType == "RedRadish" then typeOfSeed = "RedRadishSeed"
 				else typeOfSeed = plantType:gsub('s', 'Seed') end
+				print("planting " .. typeOfSeed)
 				local seeds = {}
-				seeds[0] = self.parent:Get():getInventory():AddItem("farming." .. typeOfSeed)
+				for i=1,12 do
+					seeds[i] = self.parent:Get():getInventory():AddItem("farming." .. typeOfSeed)
+				end
 				ISTimedActionQueue.add(ISSeedAction:new(self.parent:Get(), seeds, #seeds, plantType, self.Plant, 200))
 				self:ClearVars()
 			end
@@ -347,28 +358,29 @@ function FarmingTask:update()
 			return true
 		end
 		
-		-- if (self.Plant == nil) then 
-		-- 	self.Plant = self:getAPlantThatNeeds("Planting") 
-		-- 	self.FarmingTaskType = "Planting"
-		-- end
-		-- if (self.Plant ~= nil) and (self.FarmingTaskType == "Planting") then
-		-- 	if(self:AreWeThereYet(self.Plant:getSquare())) then
-		-- 		self.parent:Speak(getText("ContextMenu_speech_FarmingActionPlanting"))
-		-- 		local seeds = self:getSomeSeeds()
-		-- 		 --print(""..nil)
-		-- 		if(seeds) and (#seeds > 0) then
-		-- 			local plantType = tostring(seeds[1]:getType())
-		-- 			if(plantType == "TomatoSeed") then plantType = "Tomato"
-		-- 			elseif(plantType == "BroccoliSeed") then plantType = "Broccoli"
-		-- 			elseif(plantType == "PotatoSeed") then plantType = "Potatoes"
-		-- 			else plantType = plantType:gsub('Seed', 's') end
-		-- 			self.parent:StopWalk()
-		-- 			ISTimedActionQueue.add(ISSeedAction:new(self.parent:Get(), seeds, #seeds, plantType, self.Plant, 200))
-		-- 			self:ClearVars()
-		-- 		end
-		-- 	end
-		-- 	return true
-		-- end
+		if (self.Plant == nil) then 
+			self.Plant = self:getAPlantThatNeeds("Planting") 
+			self.FarmingTaskType = "Planting"
+		end
+		if (self.Plant ~= nil) and (self.FarmingTaskType == "Planting") then
+			if(self:AreWeThereYet(self.Plant:getSquare())) then
+				self.parent:Speak(getText("ContextMenu_speech_FarmingActionPlanting"))
+				local seeds = self:getSomeSeeds()
+				 --print(""..nil)
+				if(seeds) and (#seeds > 0) then
+					local plantType = tostring(seeds[1]:getType())
+					if(plantType == "TomatoSeed") then plantType = "Tomato"
+					elseif(plantType == "BroccoliSeed") then plantType = "Broccoli"
+					elseif(plantType == "PotatoSeed") then plantType = "Potatoes"
+					elseif(plantType == "RedRadishSeed") then plantType = "RedRadish"
+					else plantType = plantType:gsub('Seed', 's') end
+					self.parent:StopWalk()
+					ISTimedActionQueue.add(ISSeedAction:new(self.parent:Get(), seeds, #seeds, plantType, self.Plant, 200))
+					self:ClearVars()
+				end
+			end
+			return true
+		end
 		
 		-- if (not self.TargetSquare) then 
 		-- 	self.TargetSquare = self:getASquareToPlow() 
