@@ -903,7 +903,7 @@ function FindAndReturnWeapon(thisItemContainer) -- exlude crap weapons
 		for i=1, items:size()-1 do
 			local item = items:get(i)
 			if(item ~= nil) and (item:getCategory() == "Weapon") and (item:getMaxDamage() > 0.1) then
-				print("FindAndReturnWeapon " .. item:getDisplayName() .. " - " .. tostring(item:getMaxDamage()))
+				--print("FindAndReturnWeapon " .. item:getDisplayName() .. " - " .. tostring(item:getMaxDamage()))
 				return item
 			end
 		end
@@ -923,7 +923,7 @@ function FindAndReturnBestWeapon(thisItemContainer) -- exlude crap weapons
 		end
 	end
 	if (bestItem ~= nil) then
-		print("FindAndReturnBestWeapon " .. tostring(bestItem:getDisplayName()) .. " - " .. tostring(bestItem:getMaxDamage()))
+		--print("FindAndReturnBestWeapon " .. tostring(bestItem:getDisplayName()) .. " - " .. tostring(bestItem:getMaxDamage()))
 	end
 	return bestItem
 end
@@ -1144,7 +1144,7 @@ else
 end
 
 if (isModEnabled("TWDRG")) then
-	SurvivorRandomSuits["Rare"]["Sheriff1"] = {"TWDRG.Hat_Police_Sheriff", "TWDRG.Trousers_Police_Sheriff", "TWDRG.Shirt_Police_Sheriff", "TWDRG.Jacket_Police_Sheriff", "Base.Shoes_BlackBoots"}
+	SurvivorRandomSuits["Rare"]["Sheriff1"] = {"TWDRG.Hat_Police_Sheriff", "TWDRG.TShirt_Police_Sheriff", "TWDRG.Shirt_Police_Sheriff", "TWDRG.Trousers_Police_Sheriff", "TWDRG.Jacket_Police_Sheriff", "TWDRG.Vest_BulletPolice_Sheriff", "Base.Shoes_BlackBoots"}
 end
 
 SurvivorRandomSuits["Rare"]["Bride1F"] = {"Base.WeddingDress", "Base.Shirt_FormalWhite", "Base.Socks_Long", "Base.Shoes_Black"}
