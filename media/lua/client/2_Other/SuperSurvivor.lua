@@ -2235,7 +2235,7 @@ function SuperSurvivor:ReadyGun(weapon)
 		if weapon:isContainsClip() then
 			local magazine = weapon:getBestMagazine(self.player)
 			if(magazine == nil) then magazine = self.player:getInventory():getFirstTypeRecurse(weapon:getMagazineType()) end
-			if(magazine == nil) then 
+			if(magazine == nil) and (SurvivorInfiniteAmmo) then 
 				self:DebugSay(self:getName().." needs to spawn magazine2:" .. tostring(weapon:getMagazineType()))
 				magazine = self.player:getInventory():AddItem(weapon:getMagazineType()); 
 			end
