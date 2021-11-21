@@ -1160,8 +1160,8 @@ SurvivorRandomSuits["Rare"]["Bandit2"] = {"Base.Hat_BalaclavaFull", "Base.Hoodie
 SurvivorRandomSuits["Rare"]["Bandit3"] = {"Base.Hat_BalaclavaFull", "Base.Vest_Hunting_Camo", "Base.Trousers_CamoGreen", "Base.Shoes_BlackBoots"}
 SurvivorRandomSuits["Rare"]["Prisoner1"] = {"Base.Boilersuit_Prisoner", "Base.Shoes_Black"}
 SurvivorRandomSuits["Rare"]["Fireman1"] = {"Base.Hat_Fireman", "Base.Jacket_Fireman", "Base.Trousers_Fireman", "Base.Shoes_BlackBoots"}
-SurvivorRandomSuits["Rare"]["Police1"] = {"Base.Hat_Police", "Shirt_PoliceBlue", "Base.Jacket_Police", "Base.Trousers_Police", "Base.Shoes_BlackBoots"}
-SurvivorRandomSuits["Rare"]["Deputy1"] = {"Base.Hat_Police_Grey", "Shirt_PoliceGrey", "Base.Jacket_Police", "Base.Trousers_PoliceGrey", "Base.Shoes_BlackBoots"}
+SurvivorRandomSuits["Rare"]["Police1"] = {"Base.Hat_Police", "Shirt_PoliceBlue", "Base.Jacket_Police", "Base.Trousers_Police", "Base.Shoes_Black"}
+SurvivorRandomSuits["Rare"]["Deputy1"] = {"Base.Hat_Police_Grey", "Shirt_PoliceGrey", "Base.Jacket_Police", "Base.Trousers_PoliceGrey", "Base.Shoes_Black"}
 
 SurvivorRandomSuits["Normal"]["Hunter1"] = {"Base.Hat_BonnieHat_CamoGreen", "Base.Vest_Hunting_Camo", "Base.Trousers_CamoGreen", "Base.Shoes_BlackBoots"}
 SurvivorRandomSuits["Normal"]["ShopGeneric1"] = {"Base.Tshirt_DefaultDECAL", "Base.Apron_Black", "Base.TrousersMesh_DenimLight", "Base.Socks_Ankle", "Base.Shoes_TrainerTINT"}

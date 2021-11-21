@@ -243,6 +243,12 @@ function SuperSurvivorPVPHandle(wielder, victim, weapon, damage)
 			victim:setNoDamage(false)
 		end
 	end
+
+	--if victim:getVehicle() ~= nil and victim:getVehicle().frontEndHealth > 3000 then
+	--	fakehit = true
+	--	victim:setNoDamage(true)
+	--end
+
 	if fakehit then return false end
 	
 
