@@ -8,7 +8,13 @@ ISInventoryTransferAction.putSoundTime = 0
 -- keep only one instance of this action so we can queue item to transfer and avoid ton of instance when moving lot of items.
 
 function ISInventoryTransferAction:isValid()
+	self.dontAdd = false;
 	if not self.destContainer or not self.srcContainer then return false; end
+	if self.allowMissingItems and not self.srcContainer:contains(self.item) then -- if the item is destroyed before, for example when crafting something, we want to transfer the items left back to their original position, but some might be destroyed by the recipe (like molotov, the gas can will be returned, but the ripped sheet is destroyed)
+--		self:stop();
+		self.dontAdd = true;
+		return true;
+	end
 	if (not self.destContainer:isExistYet()) or (not self.srcContainer:isExistYet()) then
 		return false
 	end
@@ -75,10 +81,10 @@ function ISInventoryTransferAction:update()
 		if self.selectedContainer:getParent() then
 			self.character:faceThisObject(self.selectedContainer:getParent())
 		end
-		local loot = getPlayerLoot(self.character:getPlayerNum())
-		if (loot ~= nil) then
-			loot:selectButtonForContainer(self.selectedContainer)
+		if self.character:shouldBeTurning() then
+			getPlayerLoot(self.character:getPlayerNum()):setForceSelectedContainer(self.selectedContainer)
 		end
+		getPlayerLoot(self.character:getPlayerNum()):selectButtonForContainer(self.selectedContainer)
 	end
 --    if self.updateDestCont then
 --        self.destContainer:setSourceGrid(self.character:getCurrentSquare());
@@ -96,7 +102,7 @@ function ISInventoryTransferAction:removeItemOnCharacter()
 	self.character:removeAttachedItem(self.item)
 	if not self.character:isEquipped(self.item) then return true end
 	local addToWorld = self.character:removeFromHands(self.item)
-	self.character:removeWornItem(self.item)
+	self.character:removeWornItem(self.item, false)
 	triggerEvent("OnClothingUpdated", self.character)
 	return addToWorld;
 end
@@ -130,6 +136,7 @@ function ISInventoryTransferAction:doActionAnim(cont)
 	if cont:getContainingItem() and cont:getContainingItem():getWorldItem() then
 		self:setAnimVariable("LootPosition", "Low");
 	end
+	self.character:reportEvent("EventLootItem");
 end
 
 function ISInventoryTransferAction:startActionAnim()
@@ -169,6 +176,12 @@ end
 
 function ISInventoryTransferAction:start()
 	if self:isAlreadyTransferred(self.item) then
+		self.selectedContainer = nil
+		self.action:setTime(0)
+		return
+	end
+
+	if self.dontAdd then
 		self.selectedContainer = nil
 		self.action:setTime(0)
 		return
@@ -234,14 +247,10 @@ function ISInventoryTransferAction:perform()
 	local queuedItem = table.remove(self.queueList, 1);
 	-- reopen the correct container
 	if self.selectedContainer then
-		local loot = getPlayerLoot(self.character:getPlayerNum())
-		if (loot ~= nil) then
-			loot:selectButtonForContainer(self.selectedContainer)
-		end
+		getPlayerLoot(self.character:getPlayerNum()):selectButtonForContainer(self.selectedContainer)
 	end
-	--for i,item in ipairs(queuedItem.items) do
-	for i=1, #queuedItem.items do
-		local item = queuedItem.items[i]
+
+	for i,item in ipairs(queuedItem.items) do
 		self.item = item
 		-- Check destination container capacity and item-count limit.
 		if not self:isValid() then
@@ -274,6 +283,10 @@ function ISInventoryTransferAction:perform()
 
 		-- needed to remove from queue / start next.
 		ISBaseTimedAction.perform(self);
+	end
+
+	if instanceof(self.item, "Radio") then
+		self.character:updateEquippedRadioFreq();
 	end
 
 	if(self.item ~= nil) then  -- edits
@@ -382,6 +395,11 @@ function ISInventoryTransferAction:transferItem(item)
 		return
 	end
 
+	if self.dontAdd then
+		-- Crafting ingredient was destroyed and can't be put back into the container it came from.
+		return
+	end
+
 --	print("transfering ", item)
 	self.item = item;
 	--self.character:ClearVariable("LootPosition");
@@ -390,6 +408,7 @@ function ISInventoryTransferAction:transferItem(item)
 --		ISBaseTimedAction.perform(self);
 		return;
 	end
+
 	if self.srcContainer:getType() ~= "TradeUI" and isClient() and not self.destContainer:isInCharacterInventory(self.character) and self.destContainer:getType()~="floor" then
 		self.destContainer:addItemOnServer(self.item);
 	end
@@ -495,6 +514,7 @@ function ISInventoryTransferAction:canMergeAction(action)
 	if action.srcContainer ~= self.srcContainer then return false end
 	if action.destContainer ~= self.destContainer then return false end
 	if action.onCompleteFunc or self.onCompleteFunc then return false end
+	if action.allowMissingItems ~= self.allowMissingItems then return false end
 	return true
 end
 
@@ -513,9 +533,7 @@ function ISInventoryTransferAction:checkQueueList()
 		-- limit this to 20 items (so transfer 20 per 20 nails)
 		-- only for item with weight < 0.1
 		if round(action.item:getWeight(), 3) <= 0.1 then
-			--for i,v in ipairs(self.queueList) do
-			for k=1, #self.queueList do
-				local v = self.queueList[k]
+			for i,v in ipairs(self.queueList) do
 				if v.type == action.item:getFullType() and #v.items < 20 then
 	--				print("found same type in list", action.item:getFullType())
 					table.insert(v.items, action.item)
@@ -534,12 +552,19 @@ function ISInventoryTransferAction:checkQueueList()
 	end
 end
 
+-- This is to support returning crafting ingredients to the container they were originally in.
+-- When true, this action does not fail if the item is no longer in the source container.
+function ISInventoryTransferAction:setAllowMissingItems(allow)
+	self.allowMissingItems = allow
+end
+
 function ISInventoryTransferAction:new (character, item, srcContainer, destContainer, time)
 	local o = {}
 	setmetatable(o, self)
 	self.__index = self
 	o.character = character;
 	o.item = item;
+	o.dontAdd = false;
 	o.srcContainer = srcContainer;
 	o.destContainer = destContainer;
 	-- handle people right click the same item while eating it
